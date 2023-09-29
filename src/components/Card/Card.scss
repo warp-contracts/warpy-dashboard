@@ -1,0 +1,95 @@
+@use 'base';
+
+.card__container {
+  // opacity: 0.4;
+  background: linear-gradient(180deg, #5b616d 0%, rgba(91, 97, 109, 0.2) 100%);
+  box-shadow: 8px 10px 30px rgba(5, 7, 28, 0.5);
+  border-radius: 25px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  height: 100%;
+
+  &__header {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background: linear-gradient(180deg, #383e4a 0%, #303541 100%);
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    text-align: center;
+    font-size: base.$fs-20;
+    font-weight: base.$fw-500;
+    line-height: base.$lh-22;
+    word-wrap: break-word;
+  }
+}
+
+.container {
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+.score {
+  color: base.$text-color;
+  font-size: base.$fs-60;
+  font-weight: base.$fw-700;
+  line-height: base.$lh-60;
+  word-wrap: break-word;
+  margin-top: 22px;
+}
+
+.rewards {
+  &__title {
+    color: base.$light-color;
+    font-size: base.$fs-20;
+    font-weight: base.$fw-400;
+    line-height: base.$lh-22;
+    word-wrap: break-word;
+    background: linear-gradient(180deg, #353a46 0%, #303541 100%);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+  }
+}
+
+.table {
+  &__row {
+    border-bottom: 1px #222834 solid;
+  }
+  &__timestamp {
+    color: base.$text-color;
+    font-size: base.$fs-16;
+    font-weight: base.$fw-400;
+    line-height: base.$lh-17;
+    word-wrap: break-word;
+    padding-top: 17.5px !important;
+    padding-bottom: 17.5px !important;
+  }
+
+  &__points {
+    color: base.$text-color;
+    font-size: base.$fs-26;
+    font-weight: base.$fw-700;
+    line-height: base.$lh-25;
+    word-wrap: break-word;
+    margin-right: 8px;
+  }
+
+  &__score {
+    text-align: right;
+  }
+
+  &__more {
+    color: base.$text-color;
+    font-size: base.$fs-16;
+    font-weight: base.$fw-400;
+    line-height: base.$lh-17;
+    word-wrap: break-word;
+    padding-top: 10px;
+    padding-bottom: 14px;
+    text-align: right;
+    padding-right: calc((1.5rem * 0.5) + 0.5rem);
+  }
+}

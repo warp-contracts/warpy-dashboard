@@ -1,0 +1,96 @@
+@use 'base';
+
+.linkbar {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: base.$primary-color-dark;
+  width: 100%;
+
+  &__link {
+    font-weight: base.$fw-700;
+    color: base.$text-color;
+    text-decoration: none;
+    margin-left: 12px;
+  }
+}
+
+.header {
+  background-image: url(/assets/header-background.svg);
+  height: calc((632 / 1366) * 100vw);
+  // padding-top: calc(710 / 1366 * 100);
+  width: 100%;
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: base.$secondary-color;
+  position: relative;
+  &__nav {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+
+    &__button {
+      margin-top: 18px;
+      margin-right: 40px;
+    }
+
+    &__logo {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__main {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    &__subtitle {
+      color: base.$primary-color-light;
+      text-transform: uppercase;
+      font-size: base.$fs-22;
+      font-weight: base.$fw-700;
+      letter-spacing: base.$ls-med;
+      line-height: base.$lh-20;
+    }
+
+    &__title {
+      margin-top: 20px;
+      font-size: base.$fs-40;
+      word-wrap: break-word;
+      font-weight: base.$fw-700;
+      line-height: base.$lh-44;
+    }
+
+    &__season {
+      &__title {
+        margin-top: 20px;
+        font-size: base.$fs-24;
+        font-weight: base.$fw-300;
+        line-height: base.$lh-26;
+        word-wrap: break-word;
+      }
+
+      &__clock {
+        margin-top: 16px;
+        font-size: base.$fs-74;
+        font-weight: base.$fw-700;
+        line-height: base.$lh-81;
+        word-wrap: break-word;
+      }
+    }
+
+    &__links {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+  }
+}

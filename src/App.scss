@@ -1,0 +1,17 @@
+@use 'base';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Poppins;
+  color: base.$text-color;
+  font-size: base.$fs-16;
+  font-weight: base.$fw-400;
+  line-height: base.$lh-20;
+  word-wrap: break-word;
+
+  .row > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+  }
+}

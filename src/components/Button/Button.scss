@@ -1,0 +1,35 @@
+@use 'base';
+
+.button {
+  font-weight: base.$fw-500;
+  text-decoration: none;
+  border: none;
+  padding: 10px 24px;
+  color: base.$text-color;
+  font-family: 'Poppins';
+  box-shadow: 4px 4px 10px rgba(5.18, 7.42, 27.63, 0.8);
+  border-radius: 24.65px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.color {
+    &--primary {
+      background-color: base.$primary-color;
+
+      &:hover {
+        background-color: base.$primary-color-light !important;
+      }
+    }
+
+    &--outline {
+      background-color: transparent;
+      border: 2px base.$primary-color solid;
+
+      &:hover {
+        color: base.$primary-color-lighter !important;
+      }
+    }
+  }
+}

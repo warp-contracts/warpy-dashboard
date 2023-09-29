@@ -1,0 +1,60 @@
+@use 'base';
+
+.row-table {
+  background: linear-gradient(180deg, #5b616d 0%, rgba(91, 97, 109, 0.2) 100%);
+  box-shadow: 8px 10px 30px rgba(5, 7, 28, 0.5);
+  border-radius: 25px;
+}
+
+.table {
+  &__headers {
+    color: base.$light-color;
+    font-size: base.$fs-16;
+    font-weight: base.$fw-400;
+    line-height: base.$lh-17;
+    word-wrap: break-word;
+
+    .right {
+      text-align: right;
+    }
+  }
+
+  &__address,
+  &__discord-handle {
+    color: base.$text-color;
+    font-size: base.$fs-16;
+    font-weight: base.$fw-400;
+    line-height: base.$lh-17;
+    word-wrap: break-word;
+  }
+
+  &__rscp {
+    text-align: right;
+    &__points {
+      text-align: right;
+      color: base.$text-color;
+      font-size: base.$fs-20;
+      font-weight: base.$fw-600;
+      line-height: base.$lh-22;
+      word-wrap: break-word;
+      margin-right: 5px;
+    }
+  }
+
+  &__rewards {
+    text-align: right;
+    &__points,
+    &__nft {
+      text-align: right;
+      color: base.$text-color;
+      font-size: base.$fs-20;
+      font-weight: base.$fw-600;
+      line-height: base.$lh-22;
+      word-wrap: break-word;
+    }
+
+    &__points {
+      margin-right: 5px;
+    }
+  }
+}

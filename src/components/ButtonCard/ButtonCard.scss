@@ -1,0 +1,35 @@
+@use 'base';
+
+.button-card {
+  background: linear-gradient(0deg, #2d323e 0%, #2d323e 100%);
+  box-shadow: 8px 10px 30px rgba(5, 7, 28, 0.5);
+  border-radius: 25.19px;
+  border: 2px #5d6987 solid;
+  padding: 30px;
+
+  &__title {
+    text-align: center;
+    font-size: base.$fs-20;
+    font-weight: base.$fw-400;
+    line-height: base.$lh-22;
+    word-wrap: break-word;
+  }
+
+  &__button {
+    margin-top: 30px;
+    text-align: center;
+
+    &__img {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &__subtitle {
+    text-align: center;
+    color: base.$light-color;
+    font-size: base.$fs-14;
+    font-weight: base.$fw-400;
+    word-wrap: break-word;
+    margin-top: 10px;
+  }
+}
