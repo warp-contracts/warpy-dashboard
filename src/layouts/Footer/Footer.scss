@@ -1,0 +1,39 @@
+@use 'base';
+
+.footer {
+  background: base.$dark-color;
+  color: base.$text-color;
+  font-size: base.$fs-14;
+  font-weight: base.$fw-400;
+  line-height: base.$lh-15;
+  word-wrap: break-word;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  position: absolute;
+  bottom: 0;
+  margin-top: 140px;
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 16px;
+
+  &__links {
+    > div {
+      &:not(:last-of-type) {
+        padding-right: 14px;
+        border-right: 1px #636976 solid;
+      }
+
+      &:not(:first-of-type) {
+        padding-left: 14px;
+      }
+    }
+  }
+
+  &__socials {
+    > a {
+      img {
+        margin-right: 14px;
+      }
+    }
+  }
+}

@@ -4,16 +4,35 @@
   background: linear-gradient(180deg, #5b616d 0%, rgba(91, 97, 109, 0.2) 100%);
   box-shadow: 8px 10px 30px rgba(5, 7, 28, 0.5);
   border-radius: 25px;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin-bottom: 140px;
+
+  &__switch {
+    margin-left: 30px;
+    margin-top: 24px;
+    margin-bottom: 20px;
+  }
 }
 
 .table {
   &__headers {
-    color: base.$light-color;
-    font-size: base.$fs-16;
-    font-weight: base.$fw-400;
-    line-height: base.$lh-17;
-    word-wrap: break-word;
+    background: linear-gradient(180deg, #353a46 0%, #303541 100%);
 
+    th {
+      color: base.$light-color;
+      font-size: base.$fs-16;
+      font-weight: base.$fw-400;
+      line-height: base.$lh-17;
+      word-wrap: break-word;
+      border-bottom-width: 0px !important;
+    }
+    th:first-of-type {
+      padding-left: 30px;
+    }
+    th:last-of-type {
+      padding-right: 30px;
+    }
     .right {
       text-align: right;
     }
@@ -26,6 +45,12 @@
     font-weight: base.$fw-400;
     line-height: base.$lh-17;
     word-wrap: break-word;
+  }
+
+  &__address {
+    img {
+      margin-right: 6px;
+    }
   }
 
   &__rscp {
@@ -42,6 +67,8 @@
   }
 
   &__rewards {
+    padding-top: 16px !important;
+    padding-bottom: 14.9px !important;
     text-align: right;
     &__points,
     &__nft {
@@ -55,6 +82,15 @@
 
     &__points {
       margin-right: 5px;
+    }
+  }
+
+  &__row {
+    td:first-of-type {
+      padding-left: 30px;
+    }
+    td:last-of-type {
+      padding-right: 30px;
     }
   }
 }

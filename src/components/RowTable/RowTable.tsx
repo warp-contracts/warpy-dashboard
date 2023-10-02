@@ -1,12 +1,16 @@
 import { Col, Container, Row, Table } from 'solid-bootstrap';
 import { Component } from 'solid-js';
 import './RowTable.scss';
+import RadioSwitch from '../RadioSwitch/RadioSwitch';
 
 interface RowTableProps {
   values: { address: string; discordHandle: string; points: number; rewards: { points: string; nft: string } }[];
   tableIcon: string;
   pointsIcon: string;
   header: string;
+  radios: { name: string; value: string }[];
+  radioValue: () => string;
+  setRadioValue: (v: string | ((prev?: string) => string)) => string;
 }
 
 const RowTable: Component<RowTableProps> = (props) => {
@@ -17,10 +21,14 @@ const RowTable: Component<RowTableProps> = (props) => {
           {props.header}
         </Col>
       </Row>
-      <Table responsive='sm' class='mt-5'>
+      <Row>
+        <Col class='row-table__switch'>
+          <RadioSwitch radios={props.radios} radioValue={props.radioValue} setRadioValue={props.setRadioValue} />
+        </Col>
+      </Row>
+      <Table responsive='sm'>
         <thead>
           <tr class='table__headers'>
-            <th></th>
             <th>Address</th>
             <th>Discord</th>
             <th class='right'>RSCP</th>
@@ -29,12 +37,10 @@ const RowTable: Component<RowTableProps> = (props) => {
         </thead>
         <tbody>
           {props.values.map((v) => (
-            <tr class='table__row'>
-              <td class='align-middle'>
-                <img src={props.tableIcon}></img>
-              </td>
+            <tr class='table__row table__row--space'>
               <td class='table__address align-middle'>
-                <div>{v.address}</div>
+                <img src={props.tableIcon}></img>
+                <span class='align-middle'>{v.address}</span>
               </td>
               <td class='table__discord-handle align-middle'>
                 <div>{v.discordHandle}</div>

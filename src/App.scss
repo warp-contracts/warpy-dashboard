@@ -14,4 +14,10 @@ body {
     display: flex;
     flex-direction: column;
   }
+
+  .container-fluid,
+  .container {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }

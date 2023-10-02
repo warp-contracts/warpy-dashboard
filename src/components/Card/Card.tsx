@@ -38,28 +38,26 @@ const Card: ParentComponent<CardProps> = (props) => {
           <Col class='d-flex justify-content-center'>Latest rewards</Col>
         </Row>
       )}
-      <Row>
-        <Table responsive='sm' class='table'>
-          <tbody>
-            {props.values.map((v) => (
-              <tr class='table__row'>
-                <td class='align-middle'>
-                  <img src={props.tableIcon}></img>
-                </td>
-                <td class='table__timestamp align-middle'>
-                  <div>{v.name}</div>
-                </td>
-                <td class='table__score align-middle'>
-                  <img src={props.valueSymbol} />
-                  <span class='table__points align-middle'>{v.value}</span>
-                  {props.valueIcon && <img width={20} src={props.valueIcon} />}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <div class='table__more'>Show more</div>
-      </Row>
+      <Table responsive='sm' class='table'>
+        <tbody>
+          {props.values.map((v) => (
+            <tr class='table__row'>
+              <td class='align-middle'>
+                <img src={props.tableIcon}></img>
+              </td>
+              <td class='table__timestamp align-middle'>
+                <div>{v.name}</div>
+              </td>
+              <td class='table__score align-middle'>
+                <img src={props.valueSymbol} />
+                <span class='table__points align-middle'>{v.value}</span>
+                {props.valueIcon && <img width={20} src={props.valueIcon} />}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <div class='table__more'>Show more</div>
     </Container>
   );
 };

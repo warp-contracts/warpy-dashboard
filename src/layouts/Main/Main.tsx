@@ -1,9 +1,10 @@
-import { Component } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 import './Main.scss';
 import { Button, Col, Container, Row, Table } from 'solid-bootstrap';
 import Card from '../../components/Card/Card';
 import ButtonCard from '../../components/ButtonCard/ButtonCard';
 import RowTable from '../../components/RowTable/RowTable';
+import Footer from '../Footer/Footer';
 
 const rewards = [
   { name: '28.10.23, 14:15', value: '30' },
@@ -29,6 +30,12 @@ const ranking = [
   { address: '0sx...827s', discordHandle: '@cryptoboy', points: 153833, rewards: { points: '2m', nft: 'OGNFT' } },
   { address: '0sx...827s', discordHandle: '@cryptoboy', points: 153833, rewards: { points: '2m', nft: 'OGNFT' } },
 ];
+const radios = [
+  { name: 'All Time', value: '1' },
+  { name: 'Season', value: '2' },
+];
+const [radioValue, setRadioValue] = createSignal('1');
+
 const Main: Component = () => (
   <Container class='main justify-content-center' fluid>
     <Row class='justify-content-center'>
@@ -62,7 +69,20 @@ const Main: Component = () => (
     </Row>
     <Row class='justify-content-center mt-4'>
       <Col md={{ span: 8 }}>
-        <RowTable tableIcon='/assets/link.svg' pointsIcon='/assets/diamond.svg' values={ranking} header='Ranking' />
+        <RowTable
+          tableIcon='/assets/link.svg'
+          pointsIcon='/assets/diamond.svg'
+          values={ranking}
+          header='Ranking'
+          radios={radios}
+          radioValue={radioValue}
+          setRadioValue={setRadioValue}
+        />
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <Footer />
       </Col>
     </Row>
   </Container>

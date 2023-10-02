@@ -1,7 +1,6 @@
 @use 'base';
 
 .card__container {
-  // opacity: 0.4;
   background: linear-gradient(180deg, #5b616d 0%, rgba(91, 97, 109, 0.2) 100%);
   box-shadow: 8px 10px 30px rgba(5, 7, 28, 0.5);
   border-radius: 25px;
@@ -51,6 +50,8 @@
     padding-top: 10px;
     padding-bottom: 10px;
     margin-top: 20px;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
