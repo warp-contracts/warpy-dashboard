@@ -83,6 +83,10 @@
     &__points {
       margin-right: 5px;
     }
+
+    &__comma {
+      color: base.$text-color;
+    }
   }
 
   &__row {
@@ -92,5 +96,23 @@
     td:last-of-type {
       padding-right: 30px;
     }
+
+    &--blurred {
+      filter: blur(7px);
+    }
+  }
+
+  &__body {
+    position: relative;
+  }
+
+  &__spinner {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
   }
 }

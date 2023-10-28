@@ -19,7 +19,6 @@
 .header {
   background-image: url(/assets/header-background.svg);
   height: calc((632 / 1366) * 100vw);
-  // padding-top: calc(710 / 1366 * 100);
   width: 100%;
   background-size: 100%;
   background-position: center;
@@ -34,6 +33,10 @@
     &__button {
       margin-top: 18px;
       margin-right: 40px;
+
+      &__result {
+        margin-right: 15px;
+      }
     }
 
     &__logo {
@@ -74,14 +77,6 @@
         font-size: base.$fs-24;
         font-weight: base.$fw-300;
         line-height: base.$lh-26;
-        word-wrap: break-word;
-      }
-
-      &__clock {
-        margin-top: 16px;
-        font-size: base.$fs-74;
-        font-weight: base.$fw-700;
-        line-height: base.$lh-81;
         word-wrap: break-word;
       }
     }

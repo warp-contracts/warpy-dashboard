@@ -1,0 +1,10 @@
+@use 'base';
+
+.modal-content {
+  background-color: base.$secondary-color;
+  color: base.$text-color;
+
+  .btn-close {
+    filter: invert(90%) sepia(100%) saturate(33%) hue-rotate(200deg) brightness(107%) contrast(99%);
+  }
+}

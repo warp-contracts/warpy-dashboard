@@ -11,6 +11,10 @@
   word-wrap: break-word;
   height: 100%;
 
+  &--blurred {
+    filter: blur(6px);
+  }
+
   &__header {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -92,5 +96,15 @@
     padding-bottom: 14px;
     text-align: right;
     padding-right: calc((1.5rem * 0.5) + 0.5rem);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    a {
+      font-weight: base.$fw-400;
+      font-size: base.$fs-16;
+      color: base.$text-color;
+      text-decoration: none;
+    }
   }
 }

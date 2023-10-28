@@ -1,15 +1,26 @@
-import { Component, createEffect, createSignal } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import './Header.scss';
 import Button from '../../components/Button/Button';
+import Ticker from '../../components/Ticker/Ticker';
 
-const Header: Component = () => {
+interface HeaderProps {
+  walletAddress: () => string | null;
+  setWalletAddress: (v: string | null | ((prev?: string | null) => string | null)) => string | null;
+  connect: () => void;
+  disconnect: () => void;
+  timestamp: number | null;
+}
+
+const Header: Component<HeaderProps> = (props) => {
   return (
     <>
       <div class='linkbar'>
-        <div>Some kind of important information</div>
+        <div>
+          Join our Discord to connect your wallet address to your profile and mine RSG through activity on the server -
+        </div>
         <div>
           <a href='/' target='_blank' class='linkbar__link'>
-            Link
+            LINK
           </a>
         </div>
       </div>
@@ -19,7 +30,18 @@ const Header: Component = () => {
             <img src='/assets/header-logo.svg' />
           </div>
           <div class='header__nav__button'>
-            <Button color='primary'>Connect wallet</Button>
+            {props.walletAddress() ? (
+              <div class='d-flex align-items-center'>
+                <div class='header__nav__button__result'>{props.walletAddress()}</div>
+                <Button color='primary' handleClick={props.disconnect}>
+                  Disconnect wallet
+                </Button>
+              </div>
+            ) : (
+              <Button color='primary' handleClick={props.connect}>
+                Connect wallet
+              </Button>
+            )}
           </div>
         </div>
         <div class='header__main'>
@@ -30,9 +52,10 @@ const Header: Component = () => {
             heart of RedStone
           </div>
           <div class='header__main__season__title'>Season of the Explorers</div>
-          <div class='header__main__season__clock'>52:10:34</div>
+          <Show when={props.timestamp != null} fallback={<img src='/assets/diamond.svg' class='pt-3' />}>
+            <Ticker timestamp={props.timestamp as number} />
+          </Show>
           <div class='header__main__links'>
-            <Button color='primary'>Join campaign</Button>
             <Button color='outline'>Learn more</Button>
           </div>
         </div>

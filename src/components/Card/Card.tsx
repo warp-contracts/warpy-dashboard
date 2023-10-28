@@ -9,13 +9,15 @@ interface CardProps {
   scoreIcon?: string;
   tableIcon: string;
   valueIcon?: string;
-  values: { name: string; value: string }[];
+  values: { name: string; value: any; link?: string; valueSymbol?: string }[] | undefined;
   valueSymbol?: string;
+  link: string;
+  blurred: boolean;
 }
 
 const Card: ParentComponent<CardProps> = (props) => {
   return (
-    <Container class='card__container'>
+    <Container class={`card__container${props.blurred ? '--blurred' : ''}`}>
       <Row class='justify-content-center'>
         <Col class='card__container__header' md={{ span: 8 }}>
           {props.header}
@@ -25,7 +27,7 @@ const Card: ParentComponent<CardProps> = (props) => {
         <Row class='score'>
           <Col class='d-flex justify-content-center'>
             <Row class='align-items-center'>
-              <Col>78233</Col>
+              <Col>{props.score}</Col>
               <Col class='d-flex'>
                 <img src={props.scoreIcon} />
               </Col>
@@ -38,26 +40,37 @@ const Card: ParentComponent<CardProps> = (props) => {
           <Col class='d-flex justify-content-center'>Latest rewards</Col>
         </Row>
       )}
-      <Table responsive='sm' class='table'>
+      <Table responsive='sm' class='table mb-5'>
         <tbody>
-          {props.values.map((v) => (
-            <tr class='table__row'>
-              <td class='align-middle'>
-                <img src={props.tableIcon}></img>
-              </td>
-              <td class='table__timestamp align-middle'>
-                <div>{v.name}</div>
-              </td>
-              <td class='table__score align-middle'>
-                <img src={props.valueSymbol} />
-                <span class='table__points align-middle'>{v.value}</span>
-                {props.valueIcon && <img width={20} src={props.valueIcon} />}
-              </td>
-            </tr>
-          ))}
+          {props.values &&
+            props.values.map((v) => (
+              <tr class='table__row'>
+                <td class='align-middle'>
+                  {v.link ? (
+                    <a href={v.link} target='_blank'>
+                      <img src={props.tableIcon} />
+                    </a>
+                  ) : (
+                    <img src={props.tableIcon} />
+                  )}
+                </td>
+                <td class='table__timestamp align-middle'>
+                  <div>{v.name}</div>
+                </td>
+                <td class='table__score align-middle'>
+                  <img src={v.valueSymbol || props.valueSymbol} />
+                  <span class='table__points align-middle'>{v.value}</span>
+                  {props.valueIcon && <img width={20} src={props.valueIcon} />}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </Table>
-      <div class='table__more'>Show more</div>
+      <div class='table__more'>
+        <a href={props.link} target='_blank'>
+          Show more
+        </a>
+      </div>
     </Container>
   );
 };

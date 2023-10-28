@@ -1,0 +1,9 @@
+@use 'base';
+
+.timer {
+  margin-top: 16px;
+  font-size: base.$fs-74;
+  font-weight: base.$fw-700;
+  line-height: base.$lh-81;
+  word-wrap: break-word;
+}

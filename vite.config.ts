@@ -13,7 +13,14 @@ export default defineConfig({
     solidPlugin(),
   ],
   server: {
+    // hmr: false,
     port: 3000,
+    proxy: {
+      '/api/v9/': {
+        target: 'https://discord.com/',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     target: 'esnext',

@@ -8,6 +8,8 @@ interface ButtonCardProps {
   buttonTitle: string;
   buttonWithIcon?: string;
   subtitle?: string;
+  link?: string;
+  disabled?: boolean;
 }
 
 const ButtonCard: Component<ButtonCardProps> = (props) => {
@@ -16,6 +18,7 @@ const ButtonCard: Component<ButtonCardProps> = (props) => {
       <div class='button-card__title'>{props.title}</div>
       <div class='button-card__button d-flex justify-content-center'>
         <Button
+          disabled={props.disabled}
           color='primary'
           class={`${props.buttonWithIcon ? 'd-flex justify-content-center align-items-center' : ''}`}
         >
