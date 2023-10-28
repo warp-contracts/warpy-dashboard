@@ -26,12 +26,14 @@ export const connect = async () => {
   const provider = await detectEthereumProvider();
 
   if (provider) {
-    window.ethereum
-      .request({ method: 'eth_accounts' })
-      .then(handleAccountsChanged)
-      .catch((err: any) => {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((err) => {
+      if (err.code === 4001) {
+        console.log('Please connect to MetaMask.');
+      } else {
         console.error(err);
-      });
+      }
+    });
+    setWalletAddress(accounts[0]);
 
     window.ethereum.on('accountsChanged', handleAccountsChanged);
 
