@@ -1,38 +1,44 @@
 import { getAddress } from 'ethers';
 
 const CONTRACT_ID = 'p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU';
-export const stateFromDre = async () => {
-  const response = await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`);
-  const results = await response.json();
-  return results.state;
-};
 
-export const queryDre = async (walletAddress: string) => {
+export const getBalance = async (walletAddress: string) => {
   const addressChecksum = getAddress(walletAddress);
-  const response = await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`);
-  const results = await response.json();
 
-  const gwAliveResponse = await fetch(`https://gw.warp.cc/gateway/gcp/alive`);
-  const gwAliveResult = await gwAliveResponse.json();
-  const currentBlockHeight = gwAliveResult.db.l1_last_interaction_height;
+  const state = (await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`).then((res) => res.json())).state;
 
-  const arweaveBlockResponse = await fetch(`https://arweave.net/block/height/${currentBlockHeight}`);
-  const arweaveBlockResult = await arweaveBlockResponse.json();
-  const currentBlockTimestamp = arweaveBlockResult.timestamp;
+  const userId = Object.keys(state.users).find((u) => state.users[u] == addressChecksum);
 
-  const state = results.state;
+  if (!userId) {
+    return { balances: null, boosts: null };
+  }
+
+  const currentBlockHeight = (await fetch(`https://gw.warp.cc/gateway/gcp/alive`).then((res) => res.json())).db
+    .l1_last_interaction_height;
+
+  const currentBlockTimestamp = (
+    await fetch(`https://arweave.net/block/height/${currentBlockHeight}`).then((res) => res.json())
+  ).timestamp;
+
+  const userRoles = await fetch(`https://api-warpy.warp.cc/v1/userRoles?id=${userId}`).then((res) => res.json());
+
   const balance = state.balances[addressChecksum];
   const currentSeasons = Object.keys(state.seasons).filter((s) => {
     return (
       state.seasons[s].from < state.seasons[s].to &&
       state.seasons[s].from <= currentBlockTimestamp &&
-      state.seasons[s].to >= currentBlockTimestamp
+      state.seasons[s].to >= currentBlockTimestamp &&
+      (state.seasons[s].role ? userRoles.includes(state.seasons[s].role) : true)
     );
   });
-  const boosts = currentSeasons.map((s) => {
-    console.log(state.seasons[s]);
-    return { name: s, value: state.boosts[state.seasons[s].boost] };
+  const seasonBoosts = currentSeasons.map((s) => {
+    return { name: state.seasons[s].boost, value: state.boosts[state.seasons[s].boost] };
   });
+
+  const userBoosts = state.counter[userId].boosts.map((b: any) => {
+    return { name: b, value: state.boosts[b] };
+  });
+  const boosts = seasonBoosts.concat(userBoosts);
   return { balance, boosts };
 };
 
@@ -72,7 +78,6 @@ const formatTimestamp = (timestamp: number) => {
 
 export const getAllTimeRanking = async () => {
   const response = await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`);
-  console.log(response);
   const results = await response.json();
   const balances = results.state.balances;
   const balancesArray: [string, number][] = Object.entries(balances);
