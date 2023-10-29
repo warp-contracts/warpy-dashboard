@@ -6,6 +6,7 @@ import './ActionModal.scss';
 interface ActionModalProps {
   showModal: boolean;
   handleCloseModal: () => void;
+  modalText: string;
 }
 
 const ActionModal: Component<ActionModalProps> = (props) => (
@@ -13,7 +14,7 @@ const ActionModal: Component<ActionModalProps> = (props) => (
     <Modal.Header closeButton>
       <Modal.Title>Action required</Modal.Title>
     </Modal.Header>
-    <Modal.Body>Please connect to MetaMask!</Modal.Body>
+    <Modal.Body>{props.modalText}</Modal.Body>
     <Modal.Footer>
       <Button color='primary' handleClick={props.handleCloseModal}>
         Close
