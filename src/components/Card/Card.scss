@@ -9,11 +9,8 @@
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  height: 100%;
-
-  &--blurred {
-    filter: blur(6px);
-  }
+  // height: 100%;
+  min-height: 500px;
 
   &__header {
     padding-top: 12px;
@@ -107,4 +104,8 @@
       text-decoration: none;
     }
   }
+}
+
+.blurred {
+  filter: blur(6px);
 }

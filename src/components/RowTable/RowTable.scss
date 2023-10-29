@@ -58,11 +58,12 @@
     &__points {
       text-align: right;
       color: base.$text-color;
-      font-size: base.$fs-20;
+      font-size: base.$fs-24;
       font-weight: base.$fw-600;
       line-height: base.$lh-22;
       word-wrap: break-word;
       margin-right: 5px;
+      font-family: base.$ff-ubuntu-mono;
     }
   }
 

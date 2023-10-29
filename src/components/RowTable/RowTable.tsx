@@ -12,6 +12,7 @@ interface RowTableProps {
   radioValue: () => string;
   setRadioValue: (v: string | ((prev?: string) => string)) => string;
   loading: boolean;
+  link: string;
 }
 
 const template = Array(15).fill({
@@ -54,7 +55,9 @@ const RowTable: Component<RowTableProps> = (props) => {
                   <>
                     <tr class={`table__row table__row${!props.values || props.loading ? '--blurred' : ''}`}>
                       <td class='table__address align-middle'>
-                        <img src={props.tableIcon}></img>
+                        <a href={props.link}>
+                          <img src={props.tableIcon}></img>
+                        </a>
                         <span class='align-middle'>{v.address}</span>
                       </td>
                       <td class='table__discord-handle align-middle'>
@@ -80,7 +83,9 @@ const RowTable: Component<RowTableProps> = (props) => {
             {props.values.map((v) => (
               <tr class='table__row table__row--space'>
                 <td class='table__address align-middle'>
-                  <img src={props.tableIcon}></img>
+                  <a href={props.link} target='__blank'>
+                    <img src={props.tableIcon}></img>
+                  </a>
                   <span class='align-middle'>{v.address}</span>
                 </td>
                 <td class='table__discord-handle align-middle'>

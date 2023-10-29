@@ -19,6 +19,8 @@ interface MainProps {
   radioValue: () => string;
   setRadioValue: (v: string | ((prev?: string) => string)) => string;
   loading: boolean;
+  walletAddress: string | null;
+  userRewardsLoading: boolean;
 }
 
 const phantomRewards = [
@@ -27,6 +29,14 @@ const phantomRewards = [
   { name: '27.10.23, 08:56', value: '17' },
   { name: '27.10.23, 08:56', value: '17' },
 ];
+
+const emptyRewards = [
+  { name: '', value: '' },
+  { name: '', value: '' },
+  { name: '', value: '' },
+  { name: '', value: '' },
+];
+
 const phantomBoosts = [
   { name: 'Early Something', value: '2' },
   { name: 'GR15 Rank', value: '1.5' },
@@ -49,12 +59,12 @@ const Main: Component<MainProps> = (props) => {
             scoreIcon='/assets/diamond.svg'
             tableIcon='/assets/link.svg'
             valueIcon='/assets/diamond.svg'
-            values={props.rewards || phantomRewards}
+            values={!props.walletAddress || props.userRewardsLoading ? phantomRewards : props.rewards}
             valueSymbol='/assets/plus.svg'
             link={SONAR_CONTRACT_STATE}
-            blurred={!props.rsg}
+            blurred={!props.walletAddress || props.userRewardsLoading}
           ></Card>
-          <Show when={!props.rsg}>
+          <Show when={!props.walletAddress}>
             <div class='main__button-on-blur'>
               <Button color='primary' handleClick={connect}>
                 Connect wallet
@@ -65,13 +75,13 @@ const Main: Component<MainProps> = (props) => {
         <Col md={{ span: 4 }} class='position-relative'>
           <Card
             header='Boost table'
-            values={props.boosts || phantomBoosts}
+            values={!props.walletAddress || props.userRewardsLoading ? phantomBoosts : props.boosts}
             tableIcon='/assets/boost.svg'
             valueSymbol='/assets/cross.svg'
             link={SONAR_CONTRACT_STATE}
-            blurred={!props.boosts}
+            blurred={!props.walletAddress || props.userRewardsLoading}
           />
-          <Show when={!props.boosts}>
+          <Show when={!props.walletAddress}>
             <div class='main__button-on-blur'>
               <Button color='primary' handleClick={connect}>
                 Connect wallet
@@ -94,6 +104,7 @@ const Main: Component<MainProps> = (props) => {
             title='Want to be up to date with Tasks?'
             buttonTitle='Join Discord'
             buttonWithIcon='/assets/discord.svg'
+            link='https://discord.gg/redstonedefi'
           ></ButtonCard>
         </Col>
       </Row>
@@ -108,6 +119,7 @@ const Main: Component<MainProps> = (props) => {
             radioValue={props.radioValue}
             setRadioValue={props.setRadioValue}
             loading={props.loading}
+            link={SONAR_CONTRACT_STATE}
           />
         </Col>
       </Row>

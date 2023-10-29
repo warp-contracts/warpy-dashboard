@@ -34,6 +34,7 @@ export const connect = async () => {
       }
     });
     setWalletAddress(accounts[0]);
+    localStorage.setItem(METAMASK_ADDRESS_KEY, accounts[0]);
 
     window.ethereum.on('accountsChanged', handleAccountsChanged);
 
@@ -72,6 +73,7 @@ const App: Component = () => {
       <Main
         rewards={rewards()}
         rsg={rsg()?.balance}
+        userRewardsLoading={rsg.loading}
         boosts={rsg()?.boosts}
         connect={connect}
         disconnect={disconnect}
@@ -80,6 +82,7 @@ const App: Component = () => {
         radios={radios}
         setRadioValue={setRankingType}
         radioValue={rankingType}
+        walletAddress={walletAddress()}
       />
     </>
   );

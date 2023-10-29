@@ -13,7 +13,7 @@ export default defineConfig({
     solidPlugin(),
   ],
   server: {
-    // hmr: false,
+    hmr: false,
     port: 3000,
     proxy: {
       '/api/v9/': {
