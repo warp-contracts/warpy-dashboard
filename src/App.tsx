@@ -11,7 +11,10 @@ const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(META
 const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>('allTime');
 const [rsg, { mutate: mutateRsg }] = createResource(walletAddress, getBalance);
 const [rewards, { mutate: mutateRewards }] = createResource(walletAddress, userLatestRewards);
-const [ranking] = createResource(() => ({ rankingType: rankingType(), seasonName: 'warp' }), getRanking);
+const [ranking] = createResource(
+  () => ({ rankingType: rankingType(), seasonName: 'warp', walletAddress: walletAddress() }),
+  getRanking
+);
 const [showModal, setShowModal] = createSignal(false);
 const [modalText, setModalText] = createSignal('');
 const handleModalOpen = (modalText: string) => {
@@ -30,7 +33,7 @@ export const connect = async () => {
   const provider = await detectEthereumProvider();
 
   if (provider) {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((err) => {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((err: any) => {
       if (err.code === 4001) {
         handleModalOpen('Please connect to Metamask!');
       } else {

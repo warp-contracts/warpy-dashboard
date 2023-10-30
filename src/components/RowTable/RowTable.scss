@@ -48,9 +48,24 @@
   }
 
   &__address {
+    margin-left: 20px;
     img {
       margin-right: 6px;
     }
+  }
+
+  &__link {
+    width: 20px;
+  }
+
+  &__lp {
+    text-align: right;
+    color: base.$text-color;
+    font-size: base.$fs-16;
+    font-weight: base.$fw-400;
+    line-height: base.$lh-17;
+    word-wrap: break-word;
+    width: 20px;
   }
 
   &__rscp {
@@ -63,7 +78,7 @@
       line-height: base.$lh-22;
       word-wrap: break-word;
       margin-right: 5px;
-      font-family: base.$ff-ubuntu-mono;
+      // font-family: base.$ff-ubuntu-mono;
     }
   }
 

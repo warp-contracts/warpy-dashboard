@@ -43,9 +43,9 @@ export const getBalance = async (walletAddress: string) => {
 };
 
 export const userLatestRewards = async (walletAddress: string) => {
-  const contractStateResponse = await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`);
-  const contractStateResults = await contractStateResponse.json();
-  const users = contractStateResults.state.users;
+  const users = (
+    await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`).then((res) => res.json())
+  ).result[0];
   const addressChecksum = getAddress(walletAddress);
   const userId = Object.keys(users).find((u) => users[u] == addressChecksum);
   const latestRewardsResponse = await fetch(
@@ -76,31 +76,60 @@ const formatTimestamp = (timestamp: number) => {
   return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };
 
-export const getAllTimeRanking = async () => {
-  const response = await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`);
-  const results = await response.json();
-  const balances = results.state.balances;
-  const balancesArray: [string, number][] = Object.entries(balances);
-  const balancesArraySorted = balancesArray.sort((a, b) => Number(b[1]) - Number(a[1]));
-  const balancesArraySortedSliced = balancesArraySorted.slice(0, 15);
-  const ids = balancesArraySortedSliced
-    .map((b) => Object.keys(results.state.users).find((k) => results.state.users[k] == b[0]))
-    .join(',');
+export const getAllTimeRanking = async (walletAddress: string) => {
+  let addressChecksum;
+  if (walletAddress) {
+    addressChecksum = getAddress(walletAddress);
+  }
 
+  const rankingResult = (
+    await fetch(
+      `https://dre-warpy.warp.cc/contract/view-state?id=${CONTRACT_ID}&input={"function":"getRanking","limit":15${
+        addressChecksum ? `,"address":"${addressChecksum}"` : ''
+      }}`
+    ).then((res) => res.json())
+  ).result;
+  const ids = rankingResult.ranking.map((r: any) => r.userId).join(',');
   const usernamesResponse = await fetch(`https://api-warpy.warp.cc/v1/usernames?ids=${ids}`);
   const usernamesResults = await usernamesResponse.json();
   const ranking = usernamesResults
     .map((u: any) => {
-      const address = results.state.users[u.id];
+      const user = rankingResult.ranking.find((r: any) => r.userId == u.id);
+      const points = user.balance;
+      const address = user.address;
       return {
+        lp: user.lp,
         address: address.substr(0, 3) + '...' + address.substr(address.length - 3),
         discordHandle: `@${u.handler}`,
-        points: balancesArraySortedSliced.find((b) => b[0] == address)?.[1],
+        points,
         rewards: { points: '', nft: 'TBA' },
       };
     })
-    .sort((a: any, b: any) => Number(b.points) - Number(a.points));
-  return ranking;
+    .sort((a: any, b: any) => a.lp - b.lp);
+
+  let userRanking;
+  if (walletAddress) {
+    const userRankingResult = rankingResult.userPosition;
+    const address = userRankingResult.address;
+    const points = userRankingResult.balance;
+    const user = await fetch(`https://api-warpy.warp.cc/v1/usernames?ids=${userRankingResult.userId}`).then((res) =>
+      res.json()
+    );
+    console.log(user[0].handler);
+    userRanking = {
+      lp: userRankingResult.lp,
+      address: address.substr(0, 3) + '...' + address.substr(address.length - 3),
+      discordHandle: `@${user[0].handler}`,
+      points,
+      rewards: { points: '', nft: 'TBA' },
+    };
+  }
+
+  if (userRanking) {
+    return [userRanking].concat(ranking);
+  } else {
+    return ranking;
+  }
 };
 
 export const getSeasonRanking = async (seasonName: string) => {
@@ -131,11 +160,15 @@ export const getSeasonRanking = async (seasonName: string) => {
   return ranking;
 };
 
-export const getRanking = async (props: { rankingType: 'allTime' | 'season'; seasonName: string }) => {
+export const getRanking = async (props: {
+  rankingType: 'allTime' | 'season';
+  seasonName: string;
+  walletAddress: string;
+}) => {
   if (props.rankingType == 'allTime') {
-    return await getAllTimeRanking();
+    return await getAllTimeRanking(props.walletAddress);
   } else {
-    return await getSeasonRanking(props.seasonName);
+    return await getSeasonRanking(props.seasonName, props.walletAddress);
   }
 };
 

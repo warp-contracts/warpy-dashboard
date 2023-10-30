@@ -9,7 +9,7 @@ interface CardProps {
   scoreIcon?: string;
   tableIcon: string;
   valueIcon?: string;
-  values: { name: string; value: any; link?: string; valueSymbol?: string }[] | undefined;
+  values: { name: string; value: any; link?: string; valueSymbol?: string }[] | undefined | null;
   valueSymbol?: string;
   link: string;
   blurred: boolean;

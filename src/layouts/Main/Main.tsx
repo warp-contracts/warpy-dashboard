@@ -10,11 +10,17 @@ import { connect } from '../../App';
 
 interface MainProps {
   rsg: number;
-  boosts: { name: string; value: any }[] | undefined;
-  rewards: { name: string; value: string }[] | undefined;
+  boosts: { name: string; value: any }[] | undefined | null;
+  rewards: { name: string; value: string }[] | undefined | null;
   connect: () => void;
   disconnect: () => void;
-  ranking: { address: string; discordHandle: string; points: number; rewards: { points: string; nft: string } }[];
+  ranking: {
+    lp: number;
+    address: string;
+    discordHandle: string;
+    points: number;
+    rewards: { points: string; nft: string };
+  }[];
   radios: { name: string; value: string }[];
   radioValue: () => string;
   setRadioValue: (v: string | ((prev?: string) => string)) => string;
@@ -30,19 +36,14 @@ const phantomRewards = [
   { name: '27.10.23, 08:56', value: '17' },
 ];
 
-const emptyRewards = [
-  { name: '', value: '' },
-  { name: '', value: '' },
-  { name: '', value: '' },
-  { name: '', value: '' },
-];
-
 const phantomBoosts = [
   { name: 'Early Something', value: '2' },
   { name: 'GR15 Rank', value: '1.5' },
   { name: 'Season 0 NFT', value: '4' },
   { name: 'Season 1 NFT️', value: '1.2' },
 ];
+
+const phantomRsg = 1570;
 
 const SONAR_CONTRACT_STATE =
   'https://sonar.warp.cc/#/app/contract/p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU?network=mainnet&dre=dreWarpy#current-state';
@@ -55,7 +56,7 @@ const Main: Component<MainProps> = (props) => {
           <Card
             header='Your RSCP'
             tableName='Latest rewards'
-            score={props.rsg}
+            score={!props.walletAddress || props.userRewardsLoading ? phantomRsg : props.rsg}
             scoreIcon='/assets/diamond.svg'
             tableIcon='/assets/link.svg'
             valueIcon='/assets/diamond.svg'
