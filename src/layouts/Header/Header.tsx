@@ -21,13 +21,12 @@ const Header: Component<HeaderProps> = (props) => {
         <Col class='d-flex align-middle justify-content-center'>
           <div>
             Join our Discord to connect your wallet address to your profile and mine RSG through activity on the server
-            -
-          </div>
-          <div>
+            -{' '}
             <a href='https://discord.gg/redstonedefi' target='_blank' class='linkbar__link'>
               LINK
             </a>
           </div>
+          <div></div>
         </Col>
       </Row>
       <Row class='header'>
