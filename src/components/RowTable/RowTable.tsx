@@ -107,7 +107,7 @@ const RowTable: Component<RowTableProps> = (props) => {
                 }`}
               >
                 <td class='table__link align-middle'>
-                  <a href={props.link}>
+                  <a href={props.link} target='__blank'>
                     <img src={props.tableIcon}></img>
                   </a>
                 </td>
