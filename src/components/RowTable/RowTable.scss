@@ -47,6 +47,9 @@
     font-weight: base.$fw-400;
     line-height: base.$lh-17;
     word-wrap: break-word;
+    .bold {
+      font-weight: base.$fw-600;
+    }
   }
 
   &__address {
@@ -68,6 +71,10 @@
     line-height: base.$lh-17;
     word-wrap: break-word;
     width: 50px;
+
+    .bold {
+      font-weight: base.$fw-600;
+    }
   }
 
   &__rsg {

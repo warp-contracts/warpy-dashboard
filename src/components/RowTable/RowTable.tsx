@@ -112,15 +112,15 @@ const RowTable: Component<RowTableProps> = (props) => {
                   </a>
                 </td>
                 <td class='table__lp align-middle'>
-                  <span class='align-middle'>{v.lp}</span>
+                  <span class={`align-middle ${props.walletAddress == v.address && 'bold'}`}>{v.lp}</span>
                 </td>
                 <td class='table__address align-middle'>
-                  <span class='align-middle'>
+                  <span class={`align-middle ${props.walletAddress == v.address && 'bold'}`}>
                     {v.address.substr(0, 3) + '...' + v.address.substr(v.address.length - 3)}
                   </span>
                 </td>
                 <td class='table__discord-handle align-middle'>
-                  <div>{v.discordHandle}</div>
+                  <div class={`${props.walletAddress == v.address && 'bold'}`}>{v.discordHandle}</div>
                 </td>
                 <td class='table__rsg align-middle'>
                   <span class='table__rsg__points align-middle'>{v.points}</span>
