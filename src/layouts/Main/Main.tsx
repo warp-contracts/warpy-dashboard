@@ -52,8 +52,8 @@ const SONAR_CONTRACT_STATE =
 const Main: Component<MainProps> = (props) => {
   return (
     <Container class='main justify-content-center' fluid>
-      <Row class='justify-content-center'>
-        <Col md={{ span: 4 }} class='position-relative'>
+      <Row class='justify-content-center m-0'>
+        <Col md={{ span: 5 }} lg={{ span: 4 }} class='position-relative'>
           <Card
             header='Your RSG'
             tableName='Latest rewards'
@@ -74,7 +74,7 @@ const Main: Component<MainProps> = (props) => {
             </div>
           </Show>
         </Col>
-        <Col md={{ span: 4 }} class='position-relative'>
+        <Col md={{ span: 5 }} lg={{ span: 4 }} class='position-relative'>
           <Card
             header='Boost table'
             values={!props.walletAddress || props.userRewardsLoading ? phantomBoosts : props.boosts}
@@ -93,10 +93,10 @@ const Main: Component<MainProps> = (props) => {
         </Col>
       </Row>
       <Row class='justify-content-center mt-4'>
-        <Col md={{ span: 4 }}>
+        <Col md={{ span: 5 }} lg={{ span: 4 }}>
           <ButtonCard title='Coming soon' buttonTitle='Mint NFT' subtitle='' disabled={true}></ButtonCard>
         </Col>
-        <Col md={{ span: 4 }}>
+        <Col md={{ span: 5 }} lg={{ span: 4 }} class='mt-4 mt-md-0'>
           <ButtonCard
             title='Want to be up to date with Tasks?'
             buttonTitle='Join Discord'
@@ -106,7 +106,7 @@ const Main: Component<MainProps> = (props) => {
         </Col>
       </Row>
       <Row class='justify-content-center mt-4'>
-        <Col md={{ span: 8 }}>
+        <Col lg={{ span: 8 }} md={{ span: 10 }}>
           <RowTable
             tableIcon='/assets/link.svg'
             pointsIcon='/assets/diamond.svg'

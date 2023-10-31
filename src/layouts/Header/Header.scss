@@ -7,6 +7,11 @@
   justify-content: center;
   background-color: base.$primary-color-dark;
   width: 100%;
+  margin-left: 0 !important;
+
+  @media only screen and (max-width: 600px) {
+    font-size: base.$fs-10;
+  }
 
   &__link {
     font-weight: base.$fw-700;
@@ -25,12 +30,17 @@
   background-repeat: no-repeat;
   background-color: base.$secondary-color;
   position: relative;
+  margin-left: 0 !important;
   &__nav {
     display: flex;
     justify-content: space-between;
     height: auto;
 
     &__button {
+      @media only screen and (max-width: 600px) {
+        margin-top: 5px;
+        margin-right: 0;
+      }
       margin-top: 18px;
       margin-right: 40px;
 
@@ -40,6 +50,12 @@
     }
 
     &__logo {
+      img {
+        @media only screen and (max-width: 600px) {
+          height: 40px;
+        }
+      }
+
       &:hover {
         cursor: pointer;
       }
@@ -55,6 +71,10 @@
     text-align: center;
 
     &__subtitle {
+      @media only screen and (max-width: 600px) {
+        font-size: base.$fs-10;
+        line-height: base.$lh-6;
+      }
       color: base.$primary-color-light;
       text-transform: uppercase;
       font-size: base.$fs-22;
@@ -64,6 +84,11 @@
     }
 
     &__title {
+      @media only screen and (max-width: 600px) {
+        font-size: base.$fs-20;
+        line-height: base.$lh-22;
+        margin-top: 5px;
+      }
       margin-top: 20px;
       font-size: base.$fs-40;
       word-wrap: break-word;
@@ -73,15 +98,31 @@
 
     &__season {
       &__title {
+        @media only screen and (max-width: 600px) {
+          font-size: base.$fs-12;
+          line-height: base.$lh-15;
+          margin-top: 5px;
+        }
         margin-top: 20px;
         font-size: base.$fs-24;
         font-weight: base.$fw-300;
         line-height: base.$lh-26;
         word-wrap: break-word;
       }
+
+      &__img {
+        padding-top: 17px;
+        @media only screen and (max-width: 600px) {
+          height: 20px;
+          padding-top: 5px;
+        }
+      }
     }
 
     &__links {
+      @media only screen and (max-width: 600px) {
+        margin-top: 5px;
+      }
       margin-top: 16px;
       display: flex;
       justify-content: center;

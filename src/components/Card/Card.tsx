@@ -18,7 +18,7 @@ interface CardProps {
 const Card: ParentComponent<CardProps> = (props) => {
   return (
     <Container class={`card__container ${props.blurred ? 'blurred' : ''}`}>
-      <Row class='justify-content-center'>
+      <Row class='justify-content-center card__container__row-header'>
         <Col class='card__container__header' md={{ span: 8 }}>
           {props.header}
         </Col>

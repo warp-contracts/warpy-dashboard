@@ -15,11 +15,17 @@
   width: 100%;
   padding-left: 30px;
   padding-right: 16px;
+  margin-right: 0;
+  margin-left: 0;
 
   &__links {
     > div {
       &:not(:last-of-type) {
         padding-right: 14px;
+
+        @media only screen and (max-width: 600px) {
+          border-right: none;
+        }
         border-right: 1px #636976 solid;
       }
 

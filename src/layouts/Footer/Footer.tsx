@@ -1,38 +1,39 @@
 import { Component } from 'solid-js';
 import './Footer.scss';
+import { Col, Row } from 'solid-bootstrap';
 
 const Footer: Component = () => {
   return (
-    <div class='footer d-flex justify-content-between'>
-      <div class='d-flex footer__links'>
-        <div>© RedStone 2023</div>
-        <div>
+    <Row class='footer d-flex justify-content-between'>
+      <Col class='d-flex footer__links flex-column flex-md-row justify-content-around justify-content-md-start'>
+        <div class='pb-3 pb-md-0'>© RedStone 2023</div>
+        <div class='pb-3 pb-md-0'>
           <a href='https://discord.com/invite/PVxBZKFr46' target='__blank'>
             Contact
           </a>
         </div>
-        <div>
+        <div class='pb-3 pb-md-0'>
           <a href='https://redstone.finance/team' target='__blank'>
             Team
           </a>
         </div>
-        <div>
+        <div class='pb-3 pb-md-0'>
           <a href='https://blog.redstone.finance' target='__blank'>
             Blog
           </a>
         </div>
-        <div>
+        <div class='pb-3 pb-md-0'>
           <a href='https://redstone.finance/privacy.html' target='__blank'>
             Privacy policy
           </a>
         </div>
-        <div>
+        <div class='pb-3 pb-md-0'>
           <a href='https://redstone.finance/terms.html' target='__blank'>
             Terms of Use
           </a>
         </div>
-      </div>
-      <div class='footer__socials'>
+      </Col>
+      <Col class='footer__socials d-flex justify-content-around justify-content-md-end flex-column flex-md-row align-items-end align-md-items-middle'>
         <a href='https://twitter.com/redstone_defi' target='__blank'>
           <img src='/assets/twitter.svg'></img>
         </a>
@@ -51,8 +52,8 @@ const Footer: Component = () => {
         <a href='https://lenster.xyz/u/redstone_oracles' target='__blank'>
           <img src='/assets/lenster.svg'></img>
         </a>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 
