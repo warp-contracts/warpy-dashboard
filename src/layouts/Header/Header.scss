@@ -45,6 +45,9 @@
       margin-right: 40px;
 
       &__result {
+        @media only screen and (max-width: 600px) {
+          margin-right: 0;
+        }
         margin-right: 15px;
       }
     }

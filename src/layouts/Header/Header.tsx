@@ -35,7 +35,7 @@ const Header: Component<HeaderProps> = (props) => {
           </div>
           <div class='header__nav__button'>
             {props.walletAddress ? (
-              <div class='d-flex align-items-center'>
+              <div class='d-flex align-items-end align-items-md-center flex-column-reverse flex-md-row'>
                 <div class='header__nav__button__result'>
                   {props.walletAddress.substr(0, 3) +
                     '...' +
