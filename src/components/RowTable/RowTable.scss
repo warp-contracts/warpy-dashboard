@@ -7,6 +7,8 @@
   padding-right: 0 !important;
   padding-left: 0 !important;
   margin-bottom: 140px;
+  position: relative;
+  padding-bottom: 50px;
 
   &__switch {
     margin-left: 30px;
@@ -65,10 +67,10 @@
     font-weight: base.$fw-400;
     line-height: base.$lh-17;
     word-wrap: break-word;
-    width: 20px;
+    width: 50px;
   }
 
-  &__rscp {
+  &__rsg {
     text-align: right;
     &__points {
       text-align: right;
@@ -115,6 +117,10 @@
 
     &--blurred {
       filter: blur(7px);
+    }
+
+    &--highlighted {
+      border: 3px base.$primary-color solid;
     }
   }
 

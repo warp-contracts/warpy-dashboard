@@ -22,4 +22,12 @@ body {
   }
 
   overflow-x: hidden;
+
+  a {
+    text-decoration: none;
+    color: base.$text-color;
+    &:hover {
+      color: base.$text-color;
+    }
+  }
 }

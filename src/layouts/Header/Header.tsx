@@ -4,7 +4,7 @@ import Button from '../../components/Button/Button';
 import Ticker from '../../components/Ticker/Ticker';
 
 interface HeaderProps {
-  walletAddress: () => string | null;
+  walletAddress: string | null;
   setWalletAddress: (v: string | null | ((prev?: string | null) => string | null)) => string | null;
   connect: () => void;
   disconnect: () => void;
@@ -30,9 +30,13 @@ const Header: Component<HeaderProps> = (props) => {
             <img src='/assets/header-logo.svg' />
           </div>
           <div class='header__nav__button'>
-            {props.walletAddress() ? (
+            {props.walletAddress ? (
               <div class='d-flex align-items-center'>
-                <div class='header__nav__button__result'>{props.walletAddress()}</div>
+                <div class='header__nav__button__result'>
+                  {props.walletAddress.substr(0, 3) +
+                    '...' +
+                    props.walletAddress.substr(props.walletAddress.length - 3)}
+                </div>
                 <Button color='primary' handleClick={props.disconnect}>
                   Disconnect wallet
                 </Button>
@@ -45,13 +49,13 @@ const Header: Component<HeaderProps> = (props) => {
           </div>
         </div>
         <div class='header__main'>
-          <div class='header__main__subtitle'>Season 1</div>
+          <div class='header__main__subtitle'>Launch</div>
           <div class='header__main__title'>
-            Journey to the
+            RedStone
             <br />
-            heart of RedStone
+            Expedition
           </div>
-          <div class='header__main__season__title'>Season of the Explorers</div>
+          <div class='header__main__season__title'>Season 1 coming soon</div>
           <Show when={props.timestamp != null} fallback={<img src='/assets/diamond.svg' class='pt-3' />}>
             <Ticker timestamp={props.timestamp as number} />
           </Show>

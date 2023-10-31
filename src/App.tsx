@@ -5,6 +5,7 @@ import Main from './layouts/Main/Main';
 import { getBalance, userLatestRewards, getRanking } from './utils';
 import detectEthereumProvider from '@metamask/detect-provider';
 import ActionModal from './components/ActionModal/ActionModal';
+import { getAddress } from 'ethers';
 
 export const METAMASK_ADDRESS_KEY = 'warpik_dashboard_metamask';
 const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
@@ -22,7 +23,7 @@ const handleModalOpen = (modalText: string) => {
   setShowModal(true);
 };
 const handleCloseModal = () => setShowModal(false);
-const timestamp = 1698768031;
+const timestamp = null;
 
 const radios = [
   { name: 'All Time', value: 'allTime' },
@@ -40,8 +41,8 @@ export const connect = async () => {
         console.error(err);
       }
     });
-    setWalletAddress(accounts[0]);
-    localStorage.setItem(METAMASK_ADDRESS_KEY, accounts[0]);
+    setWalletAddress(getAddress(accounts[0]));
+    localStorage.setItem(METAMASK_ADDRESS_KEY, setWalletAddress(accounts[0]));
   } else {
     handleModalOpen('Please install MetaMask!');
   }
@@ -60,8 +61,8 @@ function handleAccountsChanged(accounts) {
   if (accounts.length === 0) {
     console.log('Please connect to MetaMask.');
   } else if (accounts[0] !== walletAddress()) {
-    setWalletAddress(accounts[0]);
-    localStorage.setItem(METAMASK_ADDRESS_KEY, accounts[0]);
+    setWalletAddress(getAddress(accounts[0]));
+    localStorage.setItem(METAMASK_ADDRESS_KEY, getAddress(accounts[0]));
   }
 }
 const App: Component = () => {
@@ -69,7 +70,7 @@ const App: Component = () => {
     <>
       <ActionModal handleCloseModal={handleCloseModal} showModal={showModal()} modalText={modalText()} />
       <Header
-        walletAddress={walletAddress}
+        walletAddress={walletAddress()}
         setWalletAddress={setWalletAddress}
         connect={connect}
         disconnect={disconnect}
@@ -88,6 +89,7 @@ const App: Component = () => {
         setRadioValue={setRankingType}
         radioValue={rankingType}
         walletAddress={walletAddress()}
+        timestamp={timestamp}
       />
     </>
   );

@@ -27,6 +27,7 @@ interface MainProps {
   loading: boolean;
   walletAddress: string | null;
   userRewardsLoading: boolean;
+  timestamp: string | null;
 }
 
 const phantomRewards = [
@@ -54,7 +55,7 @@ const Main: Component<MainProps> = (props) => {
       <Row class='justify-content-center'>
         <Col md={{ span: 4 }} class='position-relative'>
           <Card
-            header='Your RSCP'
+            header='Your RSG'
             tableName='Latest rewards'
             score={!props.walletAddress || props.userRewardsLoading ? phantomRsg : props.rsg}
             scoreIcon='/assets/diamond.svg'
@@ -93,12 +94,7 @@ const Main: Component<MainProps> = (props) => {
       </Row>
       <Row class='justify-content-center mt-4'>
         <Col md={{ span: 4 }}>
-          <ButtonCard
-            title='Seasonal NFT – coming soon'
-            buttonTitle='Mint NFT'
-            subtitle=''
-            disabled={true}
-          ></ButtonCard>
+          <ButtonCard title='Coming soon' buttonTitle='Mint NFT' subtitle='' disabled={true}></ButtonCard>
         </Col>
         <Col md={{ span: 4 }}>
           <ButtonCard
@@ -121,6 +117,8 @@ const Main: Component<MainProps> = (props) => {
             setRadioValue={props.setRadioValue}
             loading={props.loading}
             link={SONAR_CONTRACT_STATE}
+            walletAddress={props.walletAddress}
+            disabledValue={!props.timestamp ? 'season' : ''}
           />
         </Col>
       </Row>

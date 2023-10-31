@@ -19,6 +19,8 @@ interface RowTableProps {
   setRadioValue: (v: string | ((prev?: string) => string)) => string;
   loading: boolean;
   link: string;
+  walletAddress: string | null;
+  disabledValue?: string;
 }
 
 const template = Array(15).fill({
@@ -37,7 +39,12 @@ const RowTable: Component<RowTableProps> = (props) => {
       </Row>
       <Row>
         <Col class='row-table__switch'>
-          <RadioSwitch radios={props.radios} radioValue={props.radioValue} setRadioValue={props.setRadioValue} />
+          <RadioSwitch
+            radios={props.radios}
+            radioValue={props.radioValue}
+            setRadioValue={props.setRadioValue}
+            disabledValue={props.disabledValue}
+          />
         </Col>
       </Row>
       <Table responsive='sm'>
@@ -47,7 +54,7 @@ const RowTable: Component<RowTableProps> = (props) => {
             <th class='right'>Lp.</th>
             <th>Address</th>
             <th>Discord</th>
-            <th class='right'>RSCP</th>
+            <th class='right'>RSG</th>
             <th class='right'>Rewards</th>
           </tr>
         </thead>
@@ -76,8 +83,8 @@ const RowTable: Component<RowTableProps> = (props) => {
                       <td class='table__discord-handle align-middle'>
                         <div>{v.discordHandle}</div>
                       </td>
-                      <td class='table__rscp align-middle'>
-                        <span class='table__rscp__points align-middle'>{v.points}</span>
+                      <td class='table__rsg align-middle'>
+                        <span class='table__rsg__points align-middle'>{v.points}</span>
                         <img class='align-middle' height={20} src={props.pointsIcon} />
                       </td>
                       <td class='table__rewards align-middle'>
@@ -94,7 +101,11 @@ const RowTable: Component<RowTableProps> = (props) => {
             }
           >
             {props.values.map((v) => (
-              <tr class='table__row table__row--space'>
+              <tr
+                class={`table__row table__row--space ${
+                  props.walletAddress == v.address ? 'table__row--highlighted' : ''
+                }`}
+              >
                 <td class='table__link align-middle'>
                   <a href={props.link}>
                     <img src={props.tableIcon}></img>
@@ -104,13 +115,15 @@ const RowTable: Component<RowTableProps> = (props) => {
                   <span class='align-middle'>{v.lp}</span>
                 </td>
                 <td class='table__address align-middle'>
-                  <span class='align-middle'>{v.address}</span>
+                  <span class='align-middle'>
+                    {v.address.substr(0, 3) + '...' + v.address.substr(v.address.length - 3)}
+                  </span>
                 </td>
                 <td class='table__discord-handle align-middle'>
                   <div>{v.discordHandle}</div>
                 </td>
-                <td class='table__rscp align-middle'>
-                  <span class='table__rscp__points align-middle'>{v.points}</span>
+                <td class='table__rsg align-middle'>
+                  <span class='table__rsg__points align-middle'>{v.points}</span>
                   <img class='align-middle' height={20} src={props.pointsIcon} />
                 </td>
                 <td class='table__rewards align-middle'>
@@ -125,6 +138,11 @@ const RowTable: Component<RowTableProps> = (props) => {
           </Show>
         </tbody>
       </Table>
+      <div class='table__more'>
+        <a href={props.link} target='_blank'>
+          Show more
+        </a>
+      </div>
     </Container>
   );
 };

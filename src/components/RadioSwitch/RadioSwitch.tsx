@@ -6,6 +6,7 @@ interface RadioSwitchProps {
   radios: { name: string; value: string }[];
   radioValue: () => string;
   setRadioValue: (v: string | ((prev?: string) => string)) => string;
+  disabledValue?: string;
 }
 
 const RadioSwitch: Component<RadioSwitchProps> = (props) => {
@@ -21,6 +22,7 @@ const RadioSwitch: Component<RadioSwitchProps> = (props) => {
             value={radio.value}
             checked={props.radioValue() === radio.value}
             onChange={(e: any) => props.setRadioValue(e.currentTarget.value)}
+            class={`${radio.value == props.disabledValue && 'disabled'}`}
           >
             {radio.name}
           </ToggleButton>
