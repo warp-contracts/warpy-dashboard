@@ -44,6 +44,7 @@ export const connect = async () => {
     const address = getAddress(accounts[0]);
     setWalletAddress(address);
     localStorage.setItem(METAMASK_ADDRESS_KEY, address);
+    window.ethereum.on('accountsChanged', handleAccountsChanged);
   } else {
     handleModalOpen('Please install MetaMask!');
   }
@@ -55,8 +56,6 @@ const disconnect = () => {
   mutateRsg();
   mutateRewards();
 };
-
-window.ethereum.on('accountsChanged', handleAccountsChanged);
 
 function handleAccountsChanged(accounts) {
   if (accounts.length === 0) {
