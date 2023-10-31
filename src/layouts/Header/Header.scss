@@ -55,7 +55,7 @@
     &__logo {
       img {
         @media only screen and (max-width: 600px) {
-          height: 40px;
+          height: 50px;
         }
       }
 
@@ -75,8 +75,8 @@
 
     &__subtitle {
       @media only screen and (max-width: 600px) {
-        font-size: base.$fs-10;
-        line-height: base.$lh-6;
+        font-size: base.$fs-8;
+        line-height: base.$lh-10;
       }
       color: base.$primary-color-light;
       text-transform: uppercase;
@@ -88,8 +88,8 @@
 
     &__title {
       @media only screen and (max-width: 600px) {
-        font-size: base.$fs-20;
-        line-height: base.$lh-22;
+        font-size: base.$fs-14;
+        line-height: base.$lh-15;
         margin-top: 5px;
       }
       margin-top: 20px;
@@ -102,8 +102,8 @@
     &__season {
       &__title {
         @media only screen and (max-width: 600px) {
-          font-size: base.$fs-12;
-          line-height: base.$lh-15;
+          font-size: base.$fs-10;
+          line-height: base.$lh-12;
           margin-top: 5px;
         }
         margin-top: 20px;

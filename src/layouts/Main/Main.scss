@@ -7,6 +7,10 @@
   padding-bottom: 50px;
   position: relative;
 
+  @media only screen and (max-width: 600px) {
+    padding-bottom: 120px;
+  }
+
   &__button-on-blur {
     position: absolute;
     top: 50%;
