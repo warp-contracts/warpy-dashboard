@@ -21,8 +21,8 @@ const Button: ParentComponent<ButtonProps> = (props) => {
     >
       {props.loading ? (
         <>
-          <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>
-          <span class='sr-only'>Loading...</span>
+          <span class='spinner-border spinner-border-sm button__spinner' role='status' aria-hidden='true'></span>
+          <span class='sr-only button__spinner__text'>Loading...</span>
         </>
       ) : (
         props.children

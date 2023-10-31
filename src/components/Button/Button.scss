@@ -12,7 +12,11 @@
   position: relative;
 
   &__spinner {
-    position: absolute;
+    vertical-align: middle;
+
+    &__text {
+      padding-left: 8px;
+    }
   }
 
   @media only screen and (max-width: 600px) {
