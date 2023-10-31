@@ -7,7 +7,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import ActionModal from './components/ActionModal/ActionModal';
 import { getAddress } from 'ethers';
 
-export const METAMASK_ADDRESS_KEY = 'warpik_dashboard_metamask';
+export const METAMASK_ADDRESS_KEY = 'warpy_dashboard_wallet';
 const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
 const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>('allTime');
 const [rsg, { mutate: mutateRsg }] = createResource(walletAddress, getBalance);
@@ -41,8 +41,9 @@ export const connect = async () => {
         console.error(err);
       }
     });
-    setWalletAddress(getAddress(accounts[0]));
-    localStorage.setItem(METAMASK_ADDRESS_KEY, setWalletAddress(accounts[0]));
+    const address = getAddress(accounts[0]);
+    setWalletAddress(address);
+    localStorage.setItem(METAMASK_ADDRESS_KEY, address);
   } else {
     handleModalOpen('Please install MetaMask!');
   }
