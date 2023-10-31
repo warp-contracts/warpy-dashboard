@@ -28,6 +28,7 @@ interface MainProps {
   walletAddress: string | null;
   userRewardsLoading: boolean;
   timestamp: string | null;
+  loadingWalletAddress: boolean;
 }
 
 const phantomRewards = [
@@ -68,7 +69,7 @@ const Main: Component<MainProps> = (props) => {
           ></Card>
           <Show when={!props.walletAddress}>
             <div class='main__button-on-blur'>
-              <Button color='primary' handleClick={connect}>
+              <Button color='primary' handleClick={connect} loading={props.loadingWalletAddress}>
                 Connect wallet
               </Button>
             </div>
@@ -85,7 +86,7 @@ const Main: Component<MainProps> = (props) => {
           />
           <Show when={!props.walletAddress}>
             <div class='main__button-on-blur'>
-              <Button color='primary' handleClick={connect}>
+              <Button color='primary' handleClick={connect} loading={props.loadingWalletAddress}>
                 Connect wallet
               </Button>
             </div>

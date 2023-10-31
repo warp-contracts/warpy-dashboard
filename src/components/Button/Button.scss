@@ -9,6 +9,11 @@
   font-family: 'Poppins';
   box-shadow: 4px 4px 10px rgba(5.18, 7.42, 27.63, 0.8);
   border-radius: 24.65px;
+  position: relative;
+
+  &__spinner {
+    position: absolute;
+  }
 
   @media only screen and (max-width: 600px) {
     padding: 2px 5px;

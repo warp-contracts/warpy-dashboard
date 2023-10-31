@@ -10,6 +10,7 @@ interface HeaderProps {
   connect: () => void;
   disconnect: () => void;
   timestamp: number | null;
+  loadingWalletAddress: boolean;
 }
 
 const Header: Component<HeaderProps> = (props) => {
@@ -41,12 +42,12 @@ const Header: Component<HeaderProps> = (props) => {
                     '...' +
                     props.walletAddress.substr(props.walletAddress.length - 3)}
                 </div>
-                <Button color='primary' handleClick={props.disconnect}>
+                <Button color='primary' handleClick={props.disconnect} loading={props.loadingWalletAddress}>
                   Disconnect wallet
                 </Button>
               </div>
             ) : (
-              <Button color='primary' handleClick={props.connect}>
+              <Button color='primary' handleClick={props.connect} loading={props.loadingWalletAddress}>
                 Connect wallet
               </Button>
             )}

@@ -1,11 +1,13 @@
 import { ParentComponent } from 'solid-js';
 import './Button.scss';
+import { Spinner } from 'solid-bootstrap';
 
 interface ButtonProps {
   color: string;
   class?: string;
   handleClick?: () => void;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 const Button: ParentComponent<ButtonProps> = (props) => {
@@ -17,7 +19,14 @@ const Button: ParentComponent<ButtonProps> = (props) => {
         props.color == 'primary' ? 'color--primary' : props.color == 'outline' ? 'color--outline' : ''
       }`}
     >
-      {props.children}
+      {props.loading ? (
+        <>
+          <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>
+          <span class='sr-only'>Loading...</span>
+        </>
+      ) : (
+        props.children
+      )}
     </button>
   );
 };

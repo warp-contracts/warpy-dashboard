@@ -9,6 +9,7 @@ import { getAddress } from 'ethers';
 
 export const METAMASK_ADDRESS_KEY = 'warpy_dashboard_wallet';
 const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
+const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
 const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>('allTime');
 const [rsg, { mutate: mutateRsg }] = createResource(walletAddress, getBalance);
 const [rewards, { mutate: mutateRewards }] = createResource(walletAddress, userLatestRewards);
@@ -31,8 +32,8 @@ const radios = [
 ];
 
 export const connect = async () => {
+  setLoadingWalletAddress(true);
   const provider = await detectEthereumProvider();
-
   if (provider) {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((err: any) => {
       if (err.code === 4001) {
@@ -45,8 +46,10 @@ export const connect = async () => {
     setWalletAddress(address);
     localStorage.setItem(METAMASK_ADDRESS_KEY, address);
     window.ethereum.on('accountsChanged', handleAccountsChanged);
+    setLoadingWalletAddress(false);
   } else {
     handleModalOpen('Please install MetaMask!');
+    setLoadingWalletAddress(false);
   }
 };
 
@@ -75,6 +78,7 @@ const App: Component = () => {
         connect={connect}
         disconnect={disconnect}
         timestamp={timestamp}
+        loadingWalletAddress={loadingWalletAddress()}
       />
       <Main
         rewards={rewards()}
@@ -90,6 +94,7 @@ const App: Component = () => {
         radioValue={rankingType}
         walletAddress={walletAddress()}
         timestamp={timestamp}
+        loadingWalletAddress={loadingWalletAddress()}
       />
     </>
   );
