@@ -3,6 +3,7 @@ import './Header.scss';
 import Button from '../../components/Button/Button';
 import Ticker from '../../components/Ticker/Ticker';
 import { Col, Container, Row } from 'solid-bootstrap';
+import ButtonWithLink from '../../components/ButtonWithLink/ButtonWithLink';
 
 interface HeaderProps {
   walletAddress: string | null;
@@ -68,7 +69,12 @@ const Header: Component<HeaderProps> = (props) => {
             <Ticker timestamp={props.timestamp as number} />
           </Show>
           <div class='header__main__links'>
-            <Button color='outline'>Learn more</Button>
+            <ButtonWithLink
+              color='outline'
+              link='https://blog.redstone.finance/2023/10/31/redstone-is-launching-expedition'
+            >
+              Learn more
+            </ButtonWithLink>
           </div>
         </div>
       </Row>
