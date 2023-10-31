@@ -23,7 +23,7 @@ const Header: Component<HeaderProps> = (props) => {
             -
           </div>
           <div>
-            <a href='/' target='_blank' class='linkbar__link'>
+            <a href='https://discord.gg/redstonedefi' target='_blank' class='linkbar__link'>
               LINK
             </a>
           </div>
