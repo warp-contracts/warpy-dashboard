@@ -47,7 +47,9 @@ export const userLatestRewards = async (walletAddress: string) => {
     await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`).then((res) => res.json())
   ).result[0];
   const addressChecksum = getAddress(walletAddress);
-  const userId = Object.keys(users).find((u) => users[u] == addressChecksum || users[u] == walletAddress);
+  const userId = Object.keys(users).find(
+    (u) => users[u] == addressChecksum || users[u] == walletAddress || users[u] == walletAddress.toLowerCase()
+  );
   const latestRewardsResponse = await fetch(
     `https://dre-warpy.warp.cc/warpy/user-last-rewards?contractId=${CONTRACT_ID}&userId=${userId}&limit=5`
   );
@@ -201,7 +203,13 @@ const getUserAddress = (users: any, address: string) => {
   const addressChecksum = getAddress(address);
   const usersValues = Object.values(users);
   const userAddress =
-    usersValues.indexOf(addressChecksum) > -1 ? addressChecksum : usersValues.indexOf(address) > -1 ? address : null;
+    usersValues.indexOf(addressChecksum) > -1
+      ? addressChecksum
+      : usersValues.indexOf(address) > -1
+      ? address
+      : usersValues.indexOf(address.toLowerCase()) > -1
+      ? address.toLowerCase()
+      : null;
 
   return userAddress;
 };
