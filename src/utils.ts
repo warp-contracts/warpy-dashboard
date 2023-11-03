@@ -3,16 +3,16 @@ import { getAddress } from 'ethers';
 const CONTRACT_ID = 'p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU';
 
 export const getBalance = async (walletAddress: string) => {
-  const addressChecksum = getAddress(walletAddress);
-
   const state = (await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`).then((res) => res.json())).state;
 
-  const userId = Object.keys(state.users).find((u) => state.users[u] == addressChecksum);
-
+  const address = getUserAddress(state.users, walletAddress);
+  if (!address) {
+    return { balances: null, boosts: null };
+  }
+  const userId = Object.keys(state.users).find((u) => state.users[u] == address);
   if (!userId) {
     return { balances: null, boosts: null };
   }
-
   const currentBlockHeight = (await fetch(`https://gw.warp.cc/gateway/gcp/alive`).then((res) => res.json())).db
     .l1_last_interaction_height;
 
@@ -22,7 +22,7 @@ export const getBalance = async (walletAddress: string) => {
 
   const userRoles = await fetch(`https://api-warpy.warp.cc/v1/userRoles?id=${userId}`).then((res) => res.json());
 
-  const balance = state.balances[addressChecksum];
+  const balance = state.balances[address];
   const currentSeasons = Object.keys(state.seasons).filter((s) => {
     return (
       state.seasons[s].from < state.seasons[s].to &&
@@ -47,7 +47,7 @@ export const userLatestRewards = async (walletAddress: string) => {
     await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`).then((res) => res.json())
   ).result[0];
   const addressChecksum = getAddress(walletAddress);
-  const userId = Object.keys(users).find((u) => users[u] == addressChecksum);
+  const userId = Object.keys(users).find((u) => users[u] == addressChecksum || users[u] == walletAddress);
   const latestRewardsResponse = await fetch(
     `https://dre-warpy.warp.cc/warpy/user-last-rewards?contractId=${CONTRACT_ID}&userId=${userId}&limit=5`
   );
@@ -77,15 +77,18 @@ const formatTimestamp = (timestamp: number) => {
 };
 
 export const getAllTimeRanking = async (walletAddress: string | null) => {
-  let addressChecksum;
+  let address;
   if (walletAddress) {
-    addressChecksum = getAddress(walletAddress);
+    const users = (
+      await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`).then((res) => res.json())
+    ).result[0];
+    address = getUserAddress(users, walletAddress);
   }
 
   const rankingResult = (
     await fetch(
       `https://dre-warpy.warp.cc/contract/view-state?id=${CONTRACT_ID}&input={"function":"getRanking","limit":15${
-        addressChecksum ? `,"address":"${addressChecksum}"` : ''
+        address ? `,"address":"${address}"` : ''
       }}`
     ).then((res) => res.json())
   ).result;
@@ -192,4 +195,13 @@ export const countdown = (timestamp: number) => {
   const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   return days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
+};
+
+const getUserAddress = (users: any, address: string) => {
+  const addressChecksum = getAddress(address);
+  const usersValues = Object.values(users);
+  const userAddress =
+    usersValues.indexOf(addressChecksum) > -1 ? addressChecksum : usersValues.indexOf(address) > -1 ? address : null;
+
+  return userAddress;
 };

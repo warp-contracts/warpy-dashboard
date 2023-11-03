@@ -103,7 +103,7 @@ const RowTable: Component<RowTableProps> = (props) => {
             {props.values.map((v) => (
               <tr
                 class={`table__row table__row--space ${
-                  props.walletAddress == v.address ? 'table__row--highlighted' : ''
+                  props.walletAddress?.toLowerCase() == v.address.toLowerCase() ? 'table__row--highlighted' : ''
                 }`}
               >
                 <td class='table__link align-middle'>
@@ -112,15 +112,23 @@ const RowTable: Component<RowTableProps> = (props) => {
                   </a>
                 </td>
                 <td class='table__lp align-middle'>
-                  <span class={`align-middle ${props.walletAddress == v.address && 'bold'}`}>{v.lp}</span>
+                  <span
+                    class={`align-middle ${props.walletAddress?.toLowerCase() == v.address.toLowerCase() && 'bold'}`}
+                  >
+                    {v.lp}
+                  </span>
                 </td>
                 <td class='table__address align-middle'>
-                  <span class={`align-middle ${props.walletAddress == v.address && 'bold'}`}>
+                  <span
+                    class={`align-middle ${props.walletAddress?.toLowerCase() == v.address.toLowerCase() && 'bold'}`}
+                  >
                     {v.address.substr(0, 3) + '...' + v.address.substr(v.address.length - 3)}
                   </span>
                 </td>
                 <td class='table__discord-handle align-middle'>
-                  <div class={`${props.walletAddress == v.address && 'bold'}`}>{v.discordHandle}</div>
+                  <div class={`${props.walletAddress?.toLowerCase() == v.address.toLowerCase() && 'bold'}`}>
+                    {v.discordHandle}
+                  </div>
                 </td>
                 <td class='table__rsg align-middle'>
                   <span class='table__rsg__points align-middle'>{v.points}</span>
