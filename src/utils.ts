@@ -35,11 +35,14 @@ export const getBalance = async (walletAddress: string) => {
     return { name: state.seasons[s].boost, value: state.boosts[state.seasons[s].boost] };
   });
 
-  const userBoosts = state.counter[userId].boosts.map((b: any) => {
-    return { name: b, value: state.boosts[b] };
-  });
+  const userBoosts = state.counter[userId]
+    ? state.counter[userId].boosts.map((b: any) => {
+        return { name: b, value: state.boosts[b] };
+      })
+    : [];
   const boosts = seasonBoosts.concat(userBoosts);
-  return { balance, boosts };
+
+  return { balance: balance || '0', boosts: boosts.length > 0 ? boosts : null };
 };
 
 export const userLatestRewards = async (walletAddress: string) => {
