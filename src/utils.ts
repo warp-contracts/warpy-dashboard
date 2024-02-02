@@ -130,26 +130,20 @@ export const getAllTimeRanking = async (walletAddress: string | null) => {
     wallet_address: string;
     balance: string;
   } | null;
-  let username: { id: string; handler: string };
+  // let username: { id: string; handler: string };
+
   if (address && rankingResult.length == 16) {
     user = rankingResult.shift();
-    username = usernamesResults
-      .splice(
-        usernamesResults.indexOf(
-          usernamesResults.find(
-            (u: { id: string; handle: string }) => u.id == user!!.user_id
-          )
-        ),
-        1
-      )
-      .pop();
   } else {
     user = null;
   }
 
-  const ranking = usernamesResults
+  let ranking = usernamesResults
     .map((u: any) => {
       const user = rankingResult.find((r: any) => r.user_id == u.id);
+      if (!user) {
+        return;
+      }
       const points = user.balance;
       const address = user.wallet_address;
       return {
@@ -163,12 +157,18 @@ export const getAllTimeRanking = async (walletAddress: string | null) => {
     })
     .sort((a: any, b: any) => a.lp - b.lp);
 
+  ranking = ranking.filter((r: any) => !!r);
+
   let userRanking;
   if (user) {
     userRanking = {
       lp: user.rn,
       address: user.wallet_address,
-      discordHandle: `@${username!!.handler}`,
+      discordHandle: `@${
+        usernamesResults.find(
+          (u: { id: string; handler: string }) => u.id == user!!.user_id
+        ).handler
+      }`,
       points: user.balance,
       rewards: { points: '', nft: 'TBA' },
     };
