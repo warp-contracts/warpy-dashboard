@@ -72,6 +72,7 @@ function handleAccountsChanged(accounts) {
     localStorage.setItem(METAMASK_ADDRESS_KEY, getAddress(accounts[0]));
   }
 }
+
 const App: Component = () => {
   return (
     <>
