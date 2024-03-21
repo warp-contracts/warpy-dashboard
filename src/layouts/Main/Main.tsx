@@ -52,74 +52,103 @@ const SONAR_CONTRACT_STATE =
 
 const Main: Component<MainProps> = (props) => {
   return (
-    <Container class='main justify-content-center' fluid>
-      <Row class='justify-content-center m-0'>
-        <Col md={{ span: 5 }} lg={{ span: 4 }} class='position-relative'>
+    <Container class="main justify-content-center" fluid>
+      <Row class="justify-content-center m-0">
+        <Col md={{ span: 5 }} lg={{ span: 4 }} class="position-relative">
           <Card
-            header='Your RSG'
-            tableName='Latest rewards'
-            score={!props.walletAddress || props.userRewardsLoading ? phantomRsg : props.rsg}
-            scoreIcon='/assets/diamond.svg'
-            tableIcon='/assets/link.svg'
-            valueIcon='/assets/diamond.svg'
-            values={!props.walletAddress || props.userRewardsLoading ? phantomRewards : props.rewards}
-            valueSymbol='/assets/plus.svg'
+            header="Your RSG"
+            tableName="Latest rewards"
+            score={
+              !props.walletAddress || props.userRewardsLoading
+                ? phantomRsg
+                : props.rsg
+            }
+            scoreIcon="/assets/diamond.svg"
+            tableIcon="/assets/link.svg"
+            valueIcon="/assets/diamond.svg"
+            values={
+              !props.walletAddress || props.userRewardsLoading
+                ? phantomRewards
+                : props.rewards
+            }
+            valueSymbol="/assets/plus.svg"
             link={SONAR_CONTRACT_STATE}
             blurred={!props.walletAddress || props.userRewardsLoading}
           ></Card>
           <Show when={!props.walletAddress}>
-            <div class='main__button-on-blur'>
-              <Button color='primary' handleClick={connect} loading={props.loadingWalletAddress}>
+            <div class="main__button-on-blur">
+              <Button
+                color="primary"
+                handleClick={connect}
+                loading={props.loadingWalletAddress}
+              >
                 Connect wallet
               </Button>
             </div>
           </Show>
         </Col>
-        <Col md={{ span: 5 }} lg={{ span: 4 }} class='position-relative mt-4 mt-md-0'>
+        <Col
+          md={{ span: 5 }}
+          lg={{ span: 4 }}
+          class="position-relative mt-4 mt-md-0"
+        >
           <Card
-            header='Boost table'
-            values={!props.walletAddress || props.userRewardsLoading ? phantomBoosts : props.boosts}
-            tableIcon='/assets/boost.svg'
-            valueSymbol='/assets/cross.svg'
+            header="Boost table"
+            values={
+              !props.walletAddress || props.userRewardsLoading
+                ? phantomBoosts
+                : props.boosts
+            }
+            tableIcon="/assets/boost.svg"
+            valueSymbol="/assets/cross.svg"
             link={SONAR_CONTRACT_STATE}
             blurred={!props.walletAddress || props.userRewardsLoading}
           />
           <Show when={!props.walletAddress}>
-            <div class='main__button-on-blur'>
-              <Button color='primary' handleClick={connect} loading={props.loadingWalletAddress}>
+            <div class="main__button-on-blur">
+              <Button
+                color="primary"
+                handleClick={connect}
+                loading={props.loadingWalletAddress}
+              >
                 Connect wallet
               </Button>
             </div>
           </Show>
         </Col>
       </Row>
-      <Row class='justify-content-center mt-4'>
+      <Row class="justify-content-center mt-4">
         <Col md={{ span: 5 }} lg={{ span: 4 }}>
-          <ButtonCard title='Coming soon' buttonTitle='Mint NFT' subtitle='' disabled={true}></ButtonCard>
-        </Col>
-        <Col md={{ span: 5 }} lg={{ span: 4 }} class='mt-4 mt-md-0'>
           <ButtonCard
-            title='Want to be up to date with Tasks?'
-            buttonTitle='Join Discord'
-            buttonWithIcon='/assets/discord.svg'
-            link='https://discord.gg/redstonedefi'
+            title="Coming soon"
+            buttonTitle="Mint NFT"
+            subtitle=""
+            disabled={true}
+          ></ButtonCard>
+        </Col>
+        <Col md={{ span: 5 }} lg={{ span: 4 }} class="mt-4 mt-md-0">
+          <ButtonCard
+            title="Want to be up to date with Tasks?"
+            buttonTitle="Join Discord"
+            buttonWithIcon="/assets/discord.svg"
+            link="https://discord.gg/redstonedefi"
           ></ButtonCard>
         </Col>
       </Row>
-      <Row class='justify-content-center mt-4'>
+      <Row class="justify-content-center mt-4">
         <Col lg={{ span: 8 }} md={{ span: 10 }}>
           <RowTable
-            tableIcon='/assets/link.svg'
-            pointsIcon='/assets/diamond.svg'
+            tableIcon="/assets/link.svg"
+            pointsIcon="/assets/diamond.svg"
             values={props.ranking}
-            header='Ranking'
+            header="Ranking"
             radios={props.radios}
             radioValue={props.radioValue}
             setRadioValue={props.setRadioValue}
             loading={props.loading}
             link={SONAR_CONTRACT_STATE}
             walletAddress={props.walletAddress}
-            disabledValue={!props.timestamp ? 'season' : ''}
+            // disabledValue={!props.timestamp ? 'season' : ''}
           />
         </Col>
       </Row>

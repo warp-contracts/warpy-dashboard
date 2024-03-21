@@ -8,13 +8,24 @@ import ActionModal from './components/ActionModal/ActionModal';
 import { getAddress } from 'ethers';
 
 export const METAMASK_ADDRESS_KEY = 'warpy_dashboard_wallet';
-const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
+const [walletAddress, setWalletAddress] = createSignal(
+  localStorage.getItem(METAMASK_ADDRESS_KEY) || null
+);
 const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
-const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>('allTime');
+const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>(
+  'allTime'
+);
 const [rsg, { mutate: mutateRsg }] = createResource(walletAddress, getBalance);
-const [rewards, { mutate: mutateRewards }] = createResource(walletAddress, userLatestRewards);
+const [rewards, { mutate: mutateRewards }] = createResource(
+  walletAddress,
+  userLatestRewards
+);
 const [ranking] = createResource(
-  () => ({ rankingType: rankingType(), seasonName: 'warp', walletAddress: walletAddress() }),
+  () => ({
+    rankingType: rankingType(),
+    seasonName: 'warp',
+    walletAddress: walletAddress(),
+  }),
   getRanking
 );
 const [showModal, setShowModal] = createSignal(false);
@@ -28,24 +39,26 @@ const timestamp = null;
 
 const radios = [
   { name: 'All Time', value: 'allTime' },
-  { name: 'Season', value: 'season' },
+  { name: 'Season 1', value: 'season' },
 ];
 
 export const connect = async () => {
   setLoadingWalletAddress(true);
   const provider = await detectEthereumProvider();
   if (provider) {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((err: any) => {
-      if (err.code === 4001) {
-        handleModalOpen('Please connect to Metamask!');
-        setLoadingWalletAddress(false);
-        return;
-      } else {
-        console.error(err);
-        handleModalOpen('Please connect to Metamask!');
-        setLoadingWalletAddress(false);
-      }
-    });
+    const accounts = await window.ethereum
+      .request({ method: 'eth_requestAccounts' })
+      .catch((err: any) => {
+        if (err.code === 4001) {
+          handleModalOpen('Please connect to Metamask!');
+          setLoadingWalletAddress(false);
+          return;
+        } else {
+          console.error(err);
+          handleModalOpen('Please connect to Metamask!');
+          setLoadingWalletAddress(false);
+        }
+      });
     const address = getAddress(accounts[0]);
     setWalletAddress(address);
     localStorage.setItem(METAMASK_ADDRESS_KEY, address);
@@ -76,7 +89,11 @@ function handleAccountsChanged(accounts) {
 const App: Component = () => {
   return (
     <>
-      <ActionModal handleCloseModal={handleCloseModal} showModal={showModal()} modalText={modalText()} />
+      <ActionModal
+        handleCloseModal={handleCloseModal}
+        showModal={showModal()}
+        modalText={modalText()}
+      />
       <Header
         walletAddress={walletAddress()}
         setWalletAddress={setWalletAddress}

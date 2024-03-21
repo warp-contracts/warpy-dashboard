@@ -1,6 +1,10 @@
 import { getAddress } from 'ethers';
 
 const CONTRACT_ID = 'p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU';
+const SEASON_1_TIMESTAMP = 1705288536;
+// 1711029600;
+
+const cached: { [key: string]: { timestamp: number; data: any } } = {};
 
 export const getBalance = async (walletAddress: string) => {
   const state = (
@@ -102,35 +106,53 @@ const formatTimestamp = (timestamp: number) => {
   return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };
 
-export const getAllTimeRanking = async (walletAddress: string | null) => {
+export const getRanking = async (props: {
+  walletAddress: string | null;
+  rankingType: string;
+}) => {
+  const { walletAddress, rankingType } = props;
   let address;
   if (walletAddress) {
     const users = (
-      await fetch(
-        `https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`
-      ).then((res) => res.json())
+      await cachedOrFetch(
+        `warpy_dashboard_ranking_users_${rankingType}`,
+        async () => {
+          return await fetch(
+            `https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`
+          ).then((res) => res.json());
+        }
+      )
     ).result[0];
+
     address = getUserAddress(users, walletAddress);
   }
 
   const rankingResult = await fetch(
-    `https://dre-warpy.warp.cc/warpy/user-ranking?contractId=${CONTRACT_ID}&limit=15${
-      address ? `&userId=${address}` : ''
-    }`
+    `https://dre-warpy.warp.cc/warpy/${
+      rankingType == 'allTime'
+        ? `user-ranking?${address ? `userId=${address}&` : ''}`
+        : `season-ranking?from=${SEASON_1_TIMESTAMP}&${
+            address ? `&address=${address}&` : ''
+          }`
+    }contractId=${CONTRACT_ID}&limit=15`
   ).then((res) => res.json());
 
   const ids = rankingResult.map((r: any) => r.user_id).join(',');
-  const usernamesResponse = await fetch(
-    `https://api-warpy.warp.cc/v1/usernames?ids=${ids}`
+  const usernamesResults = await cachedOrFetch(
+    `warpy_dashboard_ranking_usernames_${rankingType}`,
+    async () => {
+      return await fetch(
+        `https://api-warpy.warp.cc/v1/usernames?ids=${ids}`
+      ).then((res) => res.json());
+    }
   );
-  const usernamesResults = await usernamesResponse.json();
+
   let user: {
     rn: string;
     user_id: string;
     wallet_address: string;
     balance: string;
   } | null;
-  // let username: { id: string; handler: string };
 
   if (address && rankingResult.length == 16) {
     user = rankingResult.shift();
@@ -138,26 +160,7 @@ export const getAllTimeRanking = async (walletAddress: string | null) => {
     user = null;
   }
 
-  let ranking = usernamesResults
-    .map((u: any) => {
-      const user = rankingResult.find((r: any) => r.user_id == u.id);
-      if (!user) {
-        return;
-      }
-      const points = user.balance;
-      const address = user.wallet_address;
-      return {
-        lp: user.rn,
-        address:
-          address.substr(0, 3) + '...' + address.substr(address.length - 3),
-        discordHandle: `@${u.handler}`,
-        points,
-        rewards: { points: '', nft: 'TBA' },
-      };
-    })
-    .sort((a: any, b: any) => a.lp - b.lp);
-
-  ranking = ranking.filter((r: any) => !!r);
+  const ranking = formatRanking(usernamesResults, rankingResult)!!;
 
   let userRanking;
   if (user) {
@@ -180,61 +183,6 @@ export const getAllTimeRanking = async (walletAddress: string | null) => {
     return [userRanking].concat(ranking);
   } else {
     return ranking;
-  }
-  return ranking;
-};
-
-export const getSeasonRanking = async (
-  seasonName: string,
-  walletAddress: string | null
-) => {
-  const seasonRankingResponse = await fetch(
-    `https://dre-warpy.warp.cc/warpy/season-ranking?contractId=${CONTRACT_ID}&seasonName=${seasonName}&page=1&limit=15)`
-  );
-  const seasonRankingResults = await seasonRankingResponse.json();
-  const users = (
-    await fetch(
-      `https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`
-    ).then((res) => res.json())
-  ).result[0];
-
-  const ids = seasonRankingResults.ranking.map((r: any) => r.userId).join(',');
-
-  const usernamesResponse = await fetch(
-    `https://api-warpy.warp.cc/v1/usernames?ids=${ids}`
-  );
-  const usernamesResults = await usernamesResponse.json();
-  const ranking = usernamesResults
-    .map((u: any) => {
-      const address = users[u.id];
-      return {
-        address,
-        discordHandle: `@${u.handler}`,
-        points: seasonRankingResults.ranking.find((r: any) => r.userId == u.id)
-          .points,
-        rewards: { points: '', nft: 'TBA' },
-      };
-    })
-    .sort((a: any, b: any) => Number(b.points) - Number(a.points))
-    .map((u: any, i: number) => {
-      return {
-        ...u,
-        lp: i + 1,
-      };
-    });
-
-  return ranking;
-};
-
-export const getRanking = async (props: {
-  rankingType: 'allTime' | 'season';
-  seasonName: string;
-  walletAddress: string | null;
-}) => {
-  if (props.rankingType == 'allTime') {
-    return await getAllTimeRanking(props.walletAddress);
-  } else {
-    return await getSeasonRanking(props.seasonName, props.walletAddress);
   }
 };
 
@@ -266,4 +214,56 @@ const getUserAddress = (users: any, address: string) => {
       : null;
 
   return userAddress;
+};
+
+const cachedOrFetch = async (name: string, fetchFunc: any) => {
+  const cached = localStorage.getItem(name);
+  if (cached) {
+    const parsed = JSON.parse(cached);
+    if (Date.now() < parsed.timestamp + 5 * 300000) {
+      return parsed.data;
+    }
+  }
+
+  const result = await fetchFunc();
+  localStorage.setItem(
+    name,
+    JSON.stringify({
+      timestamp: Date.now(),
+      data: result,
+    })
+  );
+  return result;
+};
+
+const formatRanking = (
+  usernames: { id: string; handler: string }[],
+  rankingResult: {
+    user_id: string;
+    rn: string;
+    balance: string;
+    wallet_address: string;
+  }[]
+) => {
+  let ranking = usernames
+    .map((u: any) => {
+      const user = rankingResult.find((r: any) => r.user_id == u.id);
+      if (!user) {
+        return;
+      }
+      const points = user.balance;
+      const address = user.wallet_address;
+      return {
+        lp: user.rn,
+        address:
+          address.substr(0, 3) + '...' + address.substr(address.length - 3),
+        discordHandle: `@${u.handler}`,
+        points,
+        rewards: { points: '', nft: 'TBA' },
+      };
+    })
+    .sort((a: any, b: any) => a.lp - b.lp);
+
+  ranking = ranking.filter((r: any) => !!r);
+  return ranking;
 };
