@@ -1,10 +1,7 @@
 import { getAddress } from 'ethers';
 
 const CONTRACT_ID = 'p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU';
-const SEASON_1_TIMESTAMP = 1705288536;
-// 1711029600;
-
-const cached: { [key: string]: { timestamp: number; data: any } } = {};
+const SEASON_1_TIMESTAMP = 1711029600;
 
 export const getBalance = async (walletAddress: string) => {
   const state = (
