@@ -13,7 +13,7 @@ const [walletAddress, setWalletAddress] = createSignal(
 );
 const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
 const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>(
-  'allTime'
+  'season'
 );
 const [rsg, { mutate: mutateRsg }] = createResource(walletAddress, getBalance);
 const [rewards, { mutate: mutateRewards }] = createResource(
