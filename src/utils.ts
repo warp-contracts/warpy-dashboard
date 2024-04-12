@@ -214,13 +214,13 @@ const getUserAddress = (users: any, address: string) => {
 };
 
 const cachedOrFetch = async (name: string, fetchFunc: any) => {
-  const cached = localStorage.getItem(name);
-  if (cached) {
-    const parsed = JSON.parse(cached);
-    if (Date.now() < parsed.timestamp + 5 * 300000) {
-      return parsed.data;
-    }
-  }
+  // const cached = localStorage.getItem(name);
+  // if (cached) {
+  //   const parsed = JSON.parse(cached);
+  //   if (Date.now() < parsed.timestamp + 5 * 300000) {
+  //     return parsed.data;
+  //   }
+  // }
 
   const result = await fetchFunc();
   localStorage.setItem(
