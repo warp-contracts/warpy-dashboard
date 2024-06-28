@@ -7,7 +7,6 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import ActionModal from './components/ActionModal/ActionModal';
 import { getAddress } from 'ethers';
 
-localStorage.clear();
 export const METAMASK_ADDRESS_KEY = 'warpy_dashboard_wallet';
 const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
 const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
