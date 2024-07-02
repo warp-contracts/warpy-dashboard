@@ -74,7 +74,7 @@ const Header: Component<HeaderProps> = (props) => {
             <br />
             Expedition
           </div>
-          <div class="header__main__season__title">Season 1</div>
+          <div class="header__main__season__title">Season 2</div>
           <Show
             when={props.timestamp != null}
             fallback={
@@ -89,9 +89,9 @@ const Header: Component<HeaderProps> = (props) => {
           <div class="header__main__links">
             <ButtonWithLink
               color="outline"
-              link="https://blog.redstone.finance/2023/10/31/redstone-is-launching-expedition"
+              link="https://discord.gg/redstonedefi"
             >
-              Learn more
+              Register
             </ButtonWithLink>
           </div>
         </div>
