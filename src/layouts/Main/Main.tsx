@@ -1,12 +1,14 @@
-import { Component, Show, createResource, createSignal } from 'solid-js';
+import { Accessor, Component, Setter, Show, createResource, createSignal } from 'solid-js';
 import './Main.scss';
-import { Col, Container, Row } from 'solid-bootstrap';
+import { Col, Container, Modal, Row } from 'solid-bootstrap';
 import Card from '../../components/Card/Card';
 import ButtonCard from '../../components/ButtonCard/ButtonCard';
 import RowTable from '../../components/RowTable/RowTable';
 import Footer from '../Footer/Footer';
 import Button from '../../components/Button/Button';
 import { connect } from '../../App';
+import ButtonCardWrapper from '../../components/ButtonCardWrapper/ButtonCardWrapper';
+import IntroModal from '../IntroModal/IntroModal';
 
 interface MainProps {
   rsg: number;
@@ -21,14 +23,13 @@ interface MainProps {
     points: number;
     rewards: { points: string; nft: string };
   }[];
-  radios: { name: string; value: string }[];
-  radioValue: () => string;
-  setRadioValue: (v: string | ((prev?: string) => string)) => string;
   loading: boolean;
   walletAddress: string | null;
   userRewardsLoading: boolean;
   timestamp: string | null;
   loadingWalletAddress: boolean;
+  showIntroModal: Accessor<boolean>;
+  setShowIntroModal: Setter<boolean>;
 }
 
 const phantomRewards = [
@@ -50,6 +51,7 @@ const phantomRsg = 1570;
 const Main: Component<MainProps> = (props) => {
   return (
     <Container class="main justify-content-center" fluid>
+      <IntroModal show={props.showIntroModal} handleClose={() => props.setShowIntroModal(false)} />
       <Row class="justify-content-center m-0">
         <Col md={{ span: 5 }} lg={{ span: 4 }} class="position-relative">
           <Card
@@ -89,16 +91,36 @@ const Main: Component<MainProps> = (props) => {
         </Col>
       </Row>
       <Row class="justify-content-center mt-4">
-        <Col md={{ span: 5 }} lg={{ span: 4 }}>
-          <ButtonCard title="Coming soon" buttonTitle="Mint NFT" subtitle="" disabled={true}></ButtonCard>
-        </Col>
-        <Col md={{ span: 5 }} lg={{ span: 4 }} class="mt-4 mt-md-0">
-          <ButtonCard
-            title="Want to be up to date with Tasks?"
-            buttonTitle="Join Discord"
-            buttonWithIcon="/assets/discord.svg"
-            link="https://discord.gg/redstonedefi"
-          ></ButtonCard>
+        <Col lg={{ span: 8 }} md={{ span: 10 }} class="main__slider__bg">
+          <ButtonCardWrapper withSlider={true}>
+            <div class="slide slide1">
+              <ButtonCard
+                title="Weekly Best Content"
+                buttonTitle="Participate"
+                link="https://discord.com/channels/786251205008949258/1206919012588585001/1206919012588585001"
+                subtitle=""
+                backgroundImage="/assets/background_weekly.png"
+              ></ButtonCard>
+            </div>
+            <div class="slide slide2">
+              <ButtonCard
+                title="Hall of Fame"
+                buttonTitle="Participate"
+                link="https://discord.com/channels/786251205008949258/1140651744053956608/1140651744053956608"
+                subtitle=""
+                backgroundImage="/assets/background_hof.png"
+              ></ButtonCard>
+            </div>
+            <div class="slide slide3">
+              <ButtonCard
+                title="RedStone Miners"
+                buttonTitle="Participate"
+                link="https://redstone-finance.notion.site/RedStone-Miners-Ambassador-Program-0b5c0ac2943549ac943243b693de7bc7"
+                subtitle=""
+                backgroundImage="/assets/background_weekly.png"
+              ></ButtonCard>
+            </div>
+          </ButtonCardWrapper>
         </Col>
       </Row>
       <Row class="justify-content-center mt-4">
@@ -108,12 +130,8 @@ const Main: Component<MainProps> = (props) => {
             pointsIcon="/assets/diamond.svg"
             values={props.ranking}
             header="Ranking"
-            radios={props.radios}
-            radioValue={props.radioValue}
-            setRadioValue={props.setRadioValue}
             loading={props.loading}
             walletAddress={props.walletAddress}
-            // disabledValue={!props.timestamp ? 'season' : ''}
           />
         </Col>
       </Row>

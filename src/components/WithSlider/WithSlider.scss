@@ -1,0 +1,20 @@
+.with-slider {
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  width: 100% !important;
+  height: 100%;
+
+  &__icon {
+    position: absolute;
+    cursor: pointer;
+
+    &--right {
+      right: 25px;
+    }
+
+    &--left {
+      left: 25px;
+    }
+  }
+}

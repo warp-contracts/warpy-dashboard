@@ -1,4 +1,3 @@
-import { ButtonProps, Col, Container, Row } from 'solid-bootstrap';
 import { Component } from 'solid-js';
 import './ButtonCard.scss';
 import Button from '../Button/Button';
@@ -11,36 +10,38 @@ interface ButtonCardProps {
   subtitle?: string;
   link?: string;
   disabled?: boolean;
+  backgroundImage?: string;
 }
 
 const ButtonCard: Component<ButtonCardProps> = (props) => {
   return (
-    <Col class='button-card'>
-      <div class='button-card__title'>{props.title}</div>
-      <div class='button-card__button d-flex justify-content-center'>
+    <div class="d-flex flex-column justify-content-center button-card">
+      {props.backgroundImage && <img class={`button-card__bg`} src={props.backgroundImage}></img>}
+      <div class="button-card__title">{props.title}</div>
+      <div class="button-card__button d-flex justify-content-center">
         {props.link ? (
           <ButtonWithLink
             link={props.link}
             disabled={props.disabled}
-            color='primary'
+            color="primary"
             class={`${props.buttonWithIcon ? 'd-flex justify-content-center align-items-center' : ''}`}
           >
             <div>{props.buttonTitle}</div>
-            {props.buttonWithIcon && <img src={props.buttonWithIcon} class='button-card__button__img' />}
+            {props.buttonWithIcon && <img src={props.buttonWithIcon} class="button-card__button__img" />}
           </ButtonWithLink>
         ) : (
           <Button
             disabled={props.disabled}
-            color='primary'
+            color="primary"
             class={`${props.buttonWithIcon ? 'd-flex justify-content-center align-items-center' : ''}`}
           >
             <div>{props.buttonTitle}</div>
-            {props.buttonWithIcon && <img src={props.buttonWithIcon} class='button-card__button__img' />}
+            {props.buttonWithIcon && <img src={props.buttonWithIcon} class="button-card__button__img" />}
           </Button>
         )}
       </div>
-      <div class='button-card__subtitle'>{props.subtitle}</div>
-    </Col>
+      <div class="button-card__subtitle">{props.subtitle}</div>
+    </div>
   );
 };
 

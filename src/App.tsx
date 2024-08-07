@@ -1,22 +1,20 @@
-import { Component, createResource, createSignal } from 'solid-js';
+import { Component, createEffect, createResource, createSignal } from 'solid-js';
 import Header from './layouts/Header/Header';
 import './App.scss';
 import Main from './layouts/Main/Main';
-import { getBalance, userLatestRewards, getRanking } from './utils';
+import { getBalance, userLatestRewards, getRanking, getUserId } from './utils';
 import detectEthereumProvider from '@metamask/detect-provider';
 import ActionModal from './components/ActionModal/ActionModal';
 import { getAddress } from 'ethers';
 
 export const METAMASK_ADDRESS_KEY = 'warpy_dashboard_wallet';
 const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
+const [userId] = createResource(walletAddress, getUserId);
 const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
-const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>('season');
-const [rsg, { mutate: mutateRsg }] = createResource(walletAddress, getBalance);
-const [rewards, { mutate: mutateRewards }] = createResource(walletAddress, userLatestRewards);
+const [rsg, { mutate: mutateRsg }] = createResource(userId, getBalance);
+const [rewards, { mutate: mutateRewards }] = createResource(userId, userLatestRewards);
 const [ranking] = createResource(
   () => ({
-    rankingType: rankingType(),
-    seasonName: 'warp',
     walletAddress: walletAddress(),
   }),
   getRanking
@@ -30,10 +28,12 @@ const handleModalOpen = (modalText: string) => {
 const handleCloseModal = () => setShowModal(false);
 const timestamp = null;
 
-const radios = [
-  { name: 'All Time', value: 'allTime' },
-  { name: 'Season 1', value: 'season' },
-];
+const [showIntroModal, setShowIntroModal] = createSignal(false);
+createEffect(() => {
+  if (!localStorage.getItem(METAMASK_ADDRESS_KEY)) {
+    setShowIntroModal(true);
+  }
+}, []);
 
 export const connect = async () => {
   setLoadingWalletAddress(true);
@@ -80,7 +80,9 @@ function handleAccountsChanged(accounts) {
 const App: Component = () => {
   return (
     <>
-      <ActionModal handleCloseModal={handleCloseModal} showModal={showModal()} modalText={modalText()} />
+      <ActionModal handleCloseModal={handleCloseModal} showModal={showModal()} modalTitle="Action required">
+        {modalText()}
+      </ActionModal>
       <Header
         walletAddress={walletAddress()}
         setWalletAddress={setWalletAddress}
@@ -98,12 +100,11 @@ const App: Component = () => {
         disconnect={disconnect}
         ranking={ranking()}
         loading={ranking.loading}
-        radios={radios}
-        setRadioValue={setRankingType}
-        radioValue={rankingType}
         walletAddress={walletAddress()}
         timestamp={timestamp}
         loadingWalletAddress={loadingWalletAddress()}
+        showIntroModal={showIntroModal}
+        setShowIntroModal={setShowIntroModal}
       />
     </>
   );
