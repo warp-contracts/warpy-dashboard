@@ -37,6 +37,22 @@
       }
     }
 
+    &--blue {
+      background-color: base.$blue-color;
+
+      &:hover {
+        background-color: base.$blue-color-light !important;
+      }
+    }
+
+    &--secondary {
+      background-color: base.$primary-color;
+
+      &:hover {
+        background-color: base.$primary-color-light !important;
+      }
+    }
+
     &--outline {
       background-color: transparent;
       border: 2px base.$primary-color solid;
