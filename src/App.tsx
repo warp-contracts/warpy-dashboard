@@ -9,13 +9,36 @@ import { getAddress } from 'ethers';
 
 export const METAMASK_ADDRESS_KEY = 'warpy_dashboard_wallet';
 const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
-const [userId] = createResource(walletAddress, getUserId);
-const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
-const [rsg, { mutate: mutateRsg }] = createResource(userId, getBalance);
-const [rewards, { mutate: mutateRewards }] = createResource(userId, userLatestRewards);
-const [ranking] = createResource(
+const [shouldFetch, setShouldFetch] = createSignal(false);
+const [registered, setRegistered] = createSignal(true);
+const [userId, { mutate: mutateUserId }] = createResource(
   () => ({
     walletAddress: walletAddress(),
+    shouldFetch: shouldFetch(),
+    setRegistered: setRegistered,
+  }),
+  getUserId
+);
+const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
+const [rsg, { mutate: mutateRsg }] = createResource(
+  () => ({
+    userId: userId(),
+    shouldFetch: shouldFetch(),
+  }),
+  getBalance
+);
+const [rewards, { mutate: mutateRewards }] = createResource(
+  () => ({
+    userId: userId(),
+    shouldFetch: shouldFetch(),
+  }),
+  userLatestRewards
+);
+const [ranking, { mutate: mutateRanking }] = createResource(
+  () => ({
+    walletAddress: walletAddress(),
+    shouldFetch: shouldFetch(),
+    userId: userId(),
   }),
   getRanking
 );
@@ -30,10 +53,17 @@ const timestamp = null;
 
 const [showIntroModal, setShowIntroModal] = createSignal(false);
 createEffect(() => {
-  if (!localStorage.getItem(METAMASK_ADDRESS_KEY)) {
+  setShouldFetch(true);
+  mutateRsg();
+  mutateRewards();
+  mutateRanking();
+}, [userId()]);
+
+createEffect(() => {
+  if (!registered() && walletAddress() && !userId()) {
     setShowIntroModal(true);
   }
-}, []);
+}, [walletAddress()]);
 
 export const connect = async () => {
   setLoadingWalletAddress(true);
@@ -43,10 +73,12 @@ export const connect = async () => {
       if (err.code === 4001) {
         handleModalOpen('Please connect to Metamask!');
         setLoadingWalletAddress(false);
+        mutateUserId();
         return;
       } else {
         console.error(err);
         handleModalOpen('Please connect to Metamask!');
+        mutateUserId();
         setLoadingWalletAddress(false);
       }
     });
@@ -54,26 +86,30 @@ export const connect = async () => {
     setWalletAddress(address);
     localStorage.setItem(METAMASK_ADDRESS_KEY, address);
     window.ethereum.on('accountsChanged', handleAccountsChanged);
+    mutateUserId();
     setLoadingWalletAddress(false);
   } else {
     handleModalOpen('Please install MetaMask!');
+    mutateUserId();
     setLoadingWalletAddress(false);
   }
 };
 
 const disconnect = () => {
+  setRegistered(true);
   setWalletAddress(null);
   localStorage.removeItem(METAMASK_ADDRESS_KEY);
-  mutateRsg();
-  mutateRewards();
+  mutateUserId();
 };
 
 function handleAccountsChanged(accounts) {
+  setRegistered(true);
   if (accounts.length === 0) {
     console.log('Please connect to MetaMask.');
   } else if (accounts[0] !== walletAddress()) {
     setWalletAddress(getAddress(accounts[0]));
     localStorage.setItem(METAMASK_ADDRESS_KEY, getAddress(accounts[0]));
+    mutateUserId();
   }
 }
 

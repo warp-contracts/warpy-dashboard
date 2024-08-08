@@ -1,31 +1,56 @@
 import { openDB } from 'idb';
+import { Setter } from 'solid-js';
 
 const CONTRACT_ID = 'p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU';
 const RANKING_LENGTH = 15;
 
-export const getUserId = async (walletAddress: string) => {
-  return (
-    await cachedOrFetch(`warpy_dashboard_user_id`, async () => {
-      return await fetch(`https://dre-warpy.warp.cc/warpy/user-id?address=${walletAddress}`).then((res) => res.json());
-    })
+export const getUserId = async (props: {
+  walletAddress: string | null;
+  shouldFetch: boolean | null;
+  setRegistered: Setter<boolean>;
+}) => {
+  const { walletAddress, shouldFetch, setRegistered } = props;
+  const userId = (
+    await cachedOrFetch(
+      `warpy_dashboard_user_id`,
+      async () => {
+        return await fetch(`https://dre-warpy.warp.cc/warpy/user-id?address=${walletAddress}`).then((res) =>
+          res.json()
+        );
+      },
+      shouldFetch
+    )
   )[0]?.key;
+  if (!userId) {
+    setRegistered(false);
+  }
+  return userId;
 };
 
-export const getBalance = async (userId: string) => {
+export const getBalance = async (props: { userId: string | null; shouldFetch: boolean | null }) => {
+  const { userId, shouldFetch } = props;
   if (!userId) {
     return { balances: null, boosts: null };
   }
 
   const [seasons, boosts, balance, userRoles] = await Promise.all([
-    await cachedOrFetch(`warpy_dashboard_user_roles`, async () => {
-      return await fetch(`https://api-warpy.warp.cc/v1/userRoles?id=${userId}`).then((res) => res.json());
-    }),
+    await cachedOrFetch(
+      `warpy_dashboard_user_roles`,
+      async () => {
+        return await fetch(`https://api-warpy.warp.cc/v1/userRoles?id=${userId}`).then((res) => res.json());
+      },
+      shouldFetch
+    ),
     await fetch(`https://dre-warpy.warp.cc/warpy/user-balance?userId=${userId}`).then((res) => res.json()),
-    await cachedOrFetch(`warpy_dashboard_seasons_boosts`, async () => {
-      return await fetch(
-        `https://dre-warpy.warp.cc/warpy/seasons-boosts?timestamp=${Math.round(Date.now() / 1000)}`
-      ).then((res) => res.json());
-    }),
+    await cachedOrFetch(
+      `warpy_dashboard_seasons_boosts`,
+      async () => {
+        return await fetch(
+          `https://dre-warpy.warp.cc/warpy/seasons-boosts?timestamp=${Math.round(Date.now() / 1000)}`
+        ).then((res) => res.json());
+      },
+      shouldFetch
+    ),
   ]).then(async ([r, b, s]) => {
     const seasons = s[0]?.seasons;
     const boosts = s[0]?.boosts;
@@ -41,7 +66,8 @@ export const getBalance = async (userId: string) => {
   return { balance: balance || '0', boosts: seasonBoosts.length > 0 ? seasonBoosts : null };
 };
 
-export const userLatestRewards = async (userId: string) => {
+export const userLatestRewards = async (props: { userId: string | null; shouldFetch: boolean | null }) => {
+  const { userId, shouldFetch } = props;
   if (!userId) {
     return null;
   }
@@ -74,16 +100,23 @@ const formatTimestamp = (timestamp: number) => {
   return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };
 
-export const getRanking = async (props: { walletAddress: string | null }) => {
-  const { walletAddress } = props;
-
-  const rankingResult = await cachedOrFetch(`warpy_dashboard_ranking_allTime`, async () => {
-    return await fetch(
-      `https://dre-warpy.warp.cc/warpy/user-ranking?${
-        walletAddress ? `userId=${walletAddress}&` : ''
-      }contractId=${CONTRACT_ID}&limit=15`
-    ).then((res) => res.json());
-  });
+export const getRanking = async (props: {
+  userId: string | null;
+  walletAddress: string | null;
+  shouldFetch: boolean | null;
+}) => {
+  const { walletAddress, shouldFetch, userId } = props;
+  const rankingResult = await cachedOrFetch(
+    `warpy_dashboard_ranking_allTime`,
+    async () => {
+      return await fetch(
+        `https://dre-warpy.warp.cc/warpy/user-ranking?${
+          userId ? `userId=${walletAddress}&` : ''
+        }contractId=${CONTRACT_ID}&limit=15`
+      ).then((res) => res.json());
+    },
+    shouldFetch
+  );
 
   const ids = rankingResult.map((r: any) => r.user_id);
 
@@ -98,9 +131,13 @@ export const getRanking = async (props: { walletAddress: string | null }) => {
     }).then((res) => res.json())
   ).id_to_roles;
 
-  const usernamesResults = await cachedOrFetch(`warpy_dashboard_ranking_usernames`, async () => {
-    return await fetch(`https://api-warpy.warp.cc/v1/usernames?ids=${ids.join(',')}`).then((res) => res.json());
-  });
+  const usernamesResults = await cachedOrFetch(
+    `warpy_dashboard_ranking_usernames`,
+    async () => {
+      return await fetch(`https://api-warpy.warp.cc/v1/usernames?ids=${ids.join(',')}`).then((res) => res.json());
+    },
+    shouldFetch
+  );
 
   let user: {
     rn: string;
@@ -152,7 +189,10 @@ export const countdown = (timestamp: number) => {
   return days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
 };
 
-const cachedOrFetch = async (name: string, fetchFunc: any) => {
+const cachedOrFetch = async (name: string, fetchFunc: any, shouldFetch?: boolean | null) => {
+  if (shouldFetch) {
+    return await fetchFunc();
+  }
   const db = await openDB(name, 1, {
     upgrade(db, oldVersion, newVersion, transaction, event) {
       if (!db.objectStoreNames.contains(name)) {
