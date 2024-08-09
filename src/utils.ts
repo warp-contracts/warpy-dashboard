@@ -131,6 +131,23 @@ export const getRanking = async (props: {
     }).then((res) => res.json())
   ).id_to_roles;
 
+  const seasonsBoosts = await cachedOrFetch(
+    `warpy_dashboard_seasons_boosts`,
+    async () => {
+      return await fetch(
+        `https://dre-warpy.warp.cc/warpy/seasons-boosts?timestamp=${Math.round(Date.now() / 1000)}`
+      ).then((res) => res.json());
+    },
+    shouldFetch
+  );
+
+  const { seasons } = seasonsBoosts[0];
+  Object.keys(idToRoles).forEach((r: any) => {
+    idToRoles[r] = Object.keys(seasons).filter((s) =>
+      seasons[s].role ? idToRoles[r].includes(seasons[s].role) : true
+    );
+  });
+
   const usernamesResults = await cachedOrFetch(
     `warpy_dashboard_ranking_usernames`,
     async () => {

@@ -117,7 +117,7 @@ const Main: Component<MainProps> = (props) => {
                 buttonTitle="Participate"
                 link="https://redstone-finance.notion.site/RedStone-Miners-Ambassador-Program-0b5c0ac2943549ac943243b693de7bc7"
                 subtitle=""
-                backgroundImage="/assets/background_weekly.png"
+                backgroundImage="/assets/background_miners.png"
               ></ButtonCard>
             </div>
           </ButtonCardWrapper>
