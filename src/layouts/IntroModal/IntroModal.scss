@@ -1,0 +1,45 @@
+@use 'base';
+
+.intro-modal {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  &__bullet {
+    background-color: base.$primary-color-light;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+
+    &__content {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-weight: base.$fw-700;
+      font-size: base.$fs-22;
+      line-height: base.$lh-22;
+      font-family: 'Lato';
+    }
+  }
+
+  &__text {
+    font-family: 'Poppins';
+    margin-left: 10px;
+    font-weight: base.$fw-400;
+    font-size: 16px;
+    line-height: base.$lh-22;
+  }
+
+  &__link {
+    color: base.$primary-color-light;
+  }
+
+  &__img {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
