@@ -59,7 +59,7 @@ const Header: Component<HeaderProps> = (props) => {
             <br />
             Expedition
           </div>
-          <div class="header__main__season__title">Season 1</div>
+          <div class="header__main__season__title">Season 2</div>
           <Show
             when={props.timestamp != null}
             fallback={<img class="header__main__season__img" src="/assets/diamond.svg" />}
