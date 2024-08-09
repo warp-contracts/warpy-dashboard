@@ -66,6 +66,7 @@ createEffect(() => {
 }, [walletAddress()]);
 
 export const connect = async () => {
+  setRegistered(true);
   setLoadingWalletAddress(true);
   const provider = await detectEthereumProvider();
   if (provider) {
