@@ -13,6 +13,7 @@
   min-height: 550px;
 
   &__row-header {
+    padding-bottom: 30px;
     @media only screen and (max-width: 600px) {
       margin-left: 0;
       margin-right: 0;
