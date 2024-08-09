@@ -32,10 +32,7 @@ const RowTable: Component<RowTableProps> = (props) => {
           {props.header}
         </Col>
       </Row>
-      <Row>
-        <div class="row-table__switch">All Time</div>
-      </Row>
-      <Table responsive="sm">
+      <Table responsive="sm" class="pt-5">
         <thead>
           <tr class="table__headers">
             <th class="right">Lp.</th>

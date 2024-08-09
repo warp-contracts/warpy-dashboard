@@ -18,7 +18,9 @@
     opacity: 0.3;
     position: absolute;
     left: 0;
-    top: 0;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
     width: 100%;
     height: auto;
   }
