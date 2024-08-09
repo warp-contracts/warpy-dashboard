@@ -27,7 +27,7 @@ const template = Array(15).fill({
 const RowTable: Component<RowTableProps> = (props) => {
   return (
     <Container fluid class="row-table">
-      <Row class="justify-content-center card__container__row-header">
+      <Row class="justify-content-center card__container__row-header pb-4">
         <Col class="card__container__header" md={{ span: 4 }}>
           {props.header}
         </Col>
