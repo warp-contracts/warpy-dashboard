@@ -72,8 +72,8 @@ export const connect = async () => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((err: any) => {
       if (err.code === 4001) {
         handleModalOpen('Please connect to Metamask!');
-        setLoadingWalletAddress(false);
         mutateUserId();
+        setLoadingWalletAddress(false);
         return;
       } else {
         console.error(err);
