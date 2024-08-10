@@ -10,8 +10,6 @@
   box-shadow: 4px 4px 10px rgba(5.18, 7.42, 27.63, 0.8);
   border-radius: 24.65px;
   position: relative;
-  height: 45px;
-  min-width: 180px;
 
   &__spinner {
     vertical-align: middle;
@@ -32,22 +30,6 @@
 
   &.color {
     &--primary {
-      background-color: base.$primary-color;
-
-      &:hover {
-        background-color: base.$primary-color-light !important;
-      }
-    }
-
-    &--blue {
-      background-color: base.$blue-color;
-
-      &:hover {
-        background-color: base.$blue-color-light !important;
-      }
-    }
-
-    &--secondary {
       background-color: base.$primary-color;
 
       &:hover {

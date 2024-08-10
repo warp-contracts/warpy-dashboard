@@ -7,7 +7,9 @@ import ButtonWithLink from '../../components/ButtonWithLink/ButtonWithLink';
 
 interface HeaderProps {
   walletAddress: string | null;
-  setWalletAddress: (v: string | null | ((prev?: string | null) => string | null)) => string | null;
+  setWalletAddress: (
+    v: string | null | ((prev?: string | null) => string | null)
+  ) => string | null;
   connect: () => void;
   disconnect: () => void;
   timestamp: number | null;
@@ -20,9 +22,13 @@ const Header: Component<HeaderProps> = (props) => {
       <Row class="linkbar">
         <Col class="d-flex align-middle justify-content-center">
           <div>
-            Join our Discord to connect your wallet address to your profile and mine RSG through activity on the server
-            -{' '}
-            <a href="https://discord.gg/redstonedefi" target="_blank" class="linkbar__link">
+            Join our Discord to connect your wallet address to your profile and
+            mine RSG through activity on the server -{' '}
+            <a
+              href="https://discord.gg/redstonedefi"
+              target="_blank"
+              class="linkbar__link"
+            >
               LINK
             </a>
           </div>
@@ -42,18 +48,27 @@ const Header: Component<HeaderProps> = (props) => {
                     '...' +
                     props.walletAddress.substr(props.walletAddress.length - 3)}
                 </div>
-                <Button color="primary" handleClick={props.disconnect} loading={props.loadingWalletAddress}>
+                <Button
+                  color="primary"
+                  handleClick={props.disconnect}
+                  loading={props.loadingWalletAddress}
+                >
                   Disconnect wallet
                 </Button>
               </div>
             ) : (
-              <Button color="primary" handleClick={props.connect} loading={props.loadingWalletAddress}>
+              <Button
+                color="primary"
+                handleClick={props.connect}
+                loading={props.loadingWalletAddress}
+              >
                 Connect wallet
               </Button>
             )}
           </div>
         </Col>
         <div class="header__main">
+          <div class="header__main__subtitle">Launch</div>
           <div class="header__main__title">
             RedStone
             <br />
@@ -62,24 +77,21 @@ const Header: Component<HeaderProps> = (props) => {
           <div class="header__main__season__title">Season 2</div>
           <Show
             when={props.timestamp != null}
-            fallback={<img class="header__main__season__img" src="/assets/diamond.svg" />}
+            fallback={
+              <img
+                class="header__main__season__img"
+                src="/assets/diamond.svg"
+              />
+            }
           >
             <Ticker timestamp={props.timestamp as number} />
           </Show>
           <div class="header__main__links">
             <ButtonWithLink
               color="outline"
-              link="https://blog.redstone.finance/2023/10/31/redstone-is-launching-expedition"
-            >
-              Learn more
-            </ButtonWithLink>
-            <ButtonWithLink
               link="https://discord.gg/redstonedefi"
-              color="blue"
-              class="d-flex justify-content-center align-items-center"
             >
-              <div>Join Discord</div>
-              <img src="/assets/discord.svg" class="button-card__button__img" />
+              Register
             </ButtonWithLink>
           </div>
         </div>

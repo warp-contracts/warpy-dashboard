@@ -1,44 +1,23 @@
-import { Component, createEffect, createResource, createSignal } from 'solid-js';
+import { Component, createResource, createSignal } from 'solid-js';
 import Header from './layouts/Header/Header';
 import './App.scss';
 import Main from './layouts/Main/Main';
-import { getBalance, userLatestRewards, getRanking, getUserId } from './utils';
+import { getBalance, userLatestRewards, getRanking } from './utils';
 import detectEthereumProvider from '@metamask/detect-provider';
 import ActionModal from './components/ActionModal/ActionModal';
 import { getAddress } from 'ethers';
 
 export const METAMASK_ADDRESS_KEY = 'warpy_dashboard_wallet';
 const [walletAddress, setWalletAddress] = createSignal(localStorage.getItem(METAMASK_ADDRESS_KEY) || null);
-const [shouldFetch, setShouldFetch] = createSignal(false);
-const [registered, setRegistered] = createSignal(true);
-const [userId, { mutate: mutateUserId }] = createResource(
-  () => ({
-    walletAddress: walletAddress(),
-    shouldFetch: shouldFetch(),
-    setRegistered: setRegistered,
-  }),
-  getUserId
-);
 const [loadingWalletAddress, setLoadingWalletAddress] = createSignal(false);
-const [rsg, { mutate: mutateRsg }] = createResource(
+const [rankingType, setRankingType] = createSignal<'allTime' | 'season'>('season');
+const [rsg, { mutate: mutateRsg }] = createResource(walletAddress, getBalance);
+const [rewards, { mutate: mutateRewards }] = createResource(walletAddress, userLatestRewards);
+const [ranking] = createResource(
   () => ({
-    userId: userId(),
-    shouldFetch: shouldFetch(),
-  }),
-  getBalance
-);
-const [rewards, { mutate: mutateRewards }] = createResource(
-  () => ({
-    userId: userId(),
-    shouldFetch: shouldFetch(),
-  }),
-  userLatestRewards
-);
-const [ranking, { mutate: mutateRanking }] = createResource(
-  () => ({
+    rankingType: rankingType(),
+    seasonName: 'warp',
     walletAddress: walletAddress(),
-    shouldFetch: shouldFetch(),
-    userId: userId(),
   }),
   getRanking
 );
@@ -51,35 +30,23 @@ const handleModalOpen = (modalText: string) => {
 const handleCloseModal = () => setShowModal(false);
 const timestamp = null;
 
-const [showIntroModal, setShowIntroModal] = createSignal(false);
-createEffect(() => {
-  setShouldFetch(true);
-  mutateRsg();
-  mutateRewards();
-  mutateRanking();
-}, [userId()]);
-
-createEffect(() => {
-  if (!registered() && walletAddress() && !userId()) {
-    setShowIntroModal(true);
-  }
-}, [walletAddress()]);
+const radios = [
+  { name: 'All Time', value: 'allTime' },
+  { name: 'Season 1', value: 'season' },
+];
 
 export const connect = async () => {
-  setRegistered(true);
   setLoadingWalletAddress(true);
   const provider = await detectEthereumProvider();
   if (provider) {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((err: any) => {
       if (err.code === 4001) {
         handleModalOpen('Please connect to Metamask!');
-        mutateUserId();
         setLoadingWalletAddress(false);
         return;
       } else {
         console.error(err);
         handleModalOpen('Please connect to Metamask!');
-        mutateUserId();
         setLoadingWalletAddress(false);
       }
     });
@@ -87,39 +54,33 @@ export const connect = async () => {
     setWalletAddress(address);
     localStorage.setItem(METAMASK_ADDRESS_KEY, address);
     window.ethereum.on('accountsChanged', handleAccountsChanged);
-    mutateUserId();
     setLoadingWalletAddress(false);
   } else {
     handleModalOpen('Please install MetaMask!');
-    mutateUserId();
     setLoadingWalletAddress(false);
   }
 };
 
 const disconnect = () => {
-  setRegistered(true);
   setWalletAddress(null);
   localStorage.removeItem(METAMASK_ADDRESS_KEY);
-  mutateUserId();
+  mutateRsg();
+  mutateRewards();
 };
 
 function handleAccountsChanged(accounts) {
-  setRegistered(true);
   if (accounts.length === 0) {
     console.log('Please connect to MetaMask.');
   } else if (accounts[0] !== walletAddress()) {
     setWalletAddress(getAddress(accounts[0]));
     localStorage.setItem(METAMASK_ADDRESS_KEY, getAddress(accounts[0]));
-    mutateUserId();
   }
 }
 
 const App: Component = () => {
   return (
     <>
-      <ActionModal handleCloseModal={handleCloseModal} showModal={showModal()} modalTitle="Action required">
-        {modalText()}
-      </ActionModal>
+      <ActionModal handleCloseModal={handleCloseModal} showModal={showModal()} modalText={modalText()} />
       <Header
         walletAddress={walletAddress()}
         setWalletAddress={setWalletAddress}
@@ -137,11 +98,12 @@ const App: Component = () => {
         disconnect={disconnect}
         ranking={ranking()}
         loading={ranking.loading}
+        radios={radios}
+        setRadioValue={setRankingType}
+        radioValue={rankingType}
         walletAddress={walletAddress()}
         timestamp={timestamp}
         loadingWalletAddress={loadingWalletAddress()}
-        showIntroModal={showIntroModal}
-        setShowIntroModal={setShowIntroModal}
       />
     </>
   );

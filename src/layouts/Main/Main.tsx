@@ -1,14 +1,12 @@
-import { Accessor, Component, Setter, Show, createResource, createSignal } from 'solid-js';
+import { Component, Show, createResource, createSignal } from 'solid-js';
 import './Main.scss';
-import { Col, Container, Modal, Row } from 'solid-bootstrap';
+import { Col, Container, Row } from 'solid-bootstrap';
 import Card from '../../components/Card/Card';
 import ButtonCard from '../../components/ButtonCard/ButtonCard';
 import RowTable from '../../components/RowTable/RowTable';
 import Footer from '../Footer/Footer';
 import Button from '../../components/Button/Button';
 import { connect } from '../../App';
-import ButtonCardWrapper from '../../components/ButtonCardWrapper/ButtonCardWrapper';
-import IntroModal from '../IntroModal/IntroModal';
 
 interface MainProps {
   rsg: number;
@@ -23,13 +21,14 @@ interface MainProps {
     points: number;
     rewards: { points: string; nft: string };
   }[];
+  radios: { name: string; value: string }[];
+  radioValue: () => string;
+  setRadioValue: (v: string | ((prev?: string) => string)) => string;
   loading: boolean;
   walletAddress: string | null;
   userRewardsLoading: boolean;
   timestamp: string | null;
   loadingWalletAddress: boolean;
-  showIntroModal: Accessor<boolean>;
-  setShowIntroModal: Setter<boolean>;
 }
 
 const phantomRewards = [
@@ -54,33 +53,52 @@ const SONAR_CONTRACT_STATE =
 const Main: Component<MainProps> = (props) => {
   return (
     <Container class="main justify-content-center" fluid>
-      <IntroModal show={props.showIntroModal} handleClose={() => props.setShowIntroModal(false)} />
       <Row class="justify-content-center m-0">
         <Col md={{ span: 5 }} lg={{ span: 4 }} class="position-relative">
           <Card
             header="Your RSG"
             tableName="Latest rewards"
-            score={!props.walletAddress || props.userRewardsLoading ? phantomRsg : props.rsg}
+            score={
+              !props.walletAddress || props.userRewardsLoading
+                ? phantomRsg
+                : props.rsg
+            }
             scoreIcon="/assets/diamond.svg"
             tableIcon="/assets/link.svg"
             valueIcon="/assets/diamond.svg"
-            values={!props.walletAddress || props.userRewardsLoading ? phantomRewards : props.rewards}
+            values={
+              !props.walletAddress || props.userRewardsLoading
+                ? phantomRewards
+                : props.rewards
+            }
             valueSymbol="/assets/plus.svg"
             link={SONAR_CONTRACT_STATE}
             blurred={!props.walletAddress || props.userRewardsLoading}
           ></Card>
           <Show when={!props.walletAddress}>
             <div class="main__button-on-blur">
-              <Button color="primary" handleClick={connect} loading={props.loadingWalletAddress}>
+              <Button
+                color="primary"
+                handleClick={connect}
+                loading={props.loadingWalletAddress}
+              >
                 Connect wallet
               </Button>
             </div>
           </Show>
         </Col>
-        <Col md={{ span: 5 }} lg={{ span: 4 }} class="position-relative mt-4 mt-md-0">
+        <Col
+          md={{ span: 5 }}
+          lg={{ span: 4 }}
+          class="position-relative mt-4 mt-md-0"
+        >
           <Card
             header="Boost table"
-            values={!props.walletAddress || props.userRewardsLoading ? phantomBoosts : props.boosts}
+            values={
+              !props.walletAddress || props.userRewardsLoading
+                ? phantomBoosts
+                : props.boosts
+            }
             tableIcon="/assets/boost.svg"
             valueSymbol="/assets/cross.svg"
             link={SONAR_CONTRACT_STATE}
@@ -88,7 +106,11 @@ const Main: Component<MainProps> = (props) => {
           />
           <Show when={!props.walletAddress}>
             <div class="main__button-on-blur">
-              <Button color="primary" handleClick={connect} loading={props.loadingWalletAddress}>
+              <Button
+                color="primary"
+                handleClick={connect}
+                loading={props.loadingWalletAddress}
+              >
                 Connect wallet
               </Button>
             </div>
@@ -96,45 +118,21 @@ const Main: Component<MainProps> = (props) => {
         </Col>
       </Row>
       <Row class="justify-content-center mt-4">
-        <Col lg={{ span: 8 }} md={{ span: 10 }} class="main__slider__bg">
-          <ButtonCardWrapper withSlider={true}>
-            <div class="slide slide1">
-              <ButtonCard
-                title="Mascot Contest with Curvance"
-                buttonTitle="Participate"
-                link="https://x.com/redstone_defi/status/1821184718081290319"
-                subtitle=""
-                backgroundImage="/assets/background_curvance.png"
-              ></ButtonCard>
-            </div>
-            <div class="slide slide2">
-              <ButtonCard
-                title="Weekly Best Content"
-                buttonTitle="Participate"
-                link="https://discord.com/channels/786251205008949258/1206919012588585001/1206919012588585001"
-                subtitle=""
-                backgroundImage="/assets/background_weekly.png"
-              ></ButtonCard>
-            </div>
-            <div class="slide slide3">
-              <ButtonCard
-                title="Hall of Fame"
-                buttonTitle="Participate"
-                link="https://discord.com/channels/786251205008949258/1140651744053956608/1140651744053956608"
-                subtitle=""
-                backgroundImage="/assets/background_hof.png"
-              ></ButtonCard>
-            </div>
-            <div class="slide slide4">
-              <ButtonCard
-                title="RedStone Miners"
-                buttonTitle="Participate"
-                link="https://redstone-finance.notion.site/RedStone-Miners-Ambassador-Program-0b5c0ac2943549ac943243b693de7bc7"
-                subtitle=""
-                backgroundImage="/assets/background_miners.png"
-              ></ButtonCard>
-            </div>
-          </ButtonCardWrapper>
+        <Col md={{ span: 5 }} lg={{ span: 4 }}>
+          <ButtonCard
+            title="Coming soon"
+            buttonTitle="Mint NFT"
+            subtitle=""
+            disabled={true}
+          ></ButtonCard>
+        </Col>
+        <Col md={{ span: 5 }} lg={{ span: 4 }} class="mt-4 mt-md-0">
+          <ButtonCard
+            title="Want to be up to date with Tasks?"
+            buttonTitle="Join Discord"
+            buttonWithIcon="/assets/discord.svg"
+            link="https://discord.gg/redstonedefi"
+          ></ButtonCard>
         </Col>
       </Row>
       <Row class="justify-content-center mt-4">
@@ -144,9 +142,13 @@ const Main: Component<MainProps> = (props) => {
             pointsIcon="/assets/diamond.svg"
             values={props.ranking}
             header="Ranking"
+            radios={props.radios}
+            radioValue={props.radioValue}
+            setRadioValue={props.setRadioValue}
             loading={props.loading}
             link={SONAR_CONTRACT_STATE}
             walletAddress={props.walletAddress}
+            // disabledValue={!props.timestamp ? 'season' : ''}
           />
         </Col>
       </Row>
