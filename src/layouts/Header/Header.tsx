@@ -69,9 +69,9 @@ const Header: Component<HeaderProps> = (props) => {
           <div class="header__main__links">
             <ButtonWithLink
               color="outline"
-              link="https://discord.gg/redstonedefi"
+              link="https://blog.redstone.finance/2023/10/31/redstone-is-launching-expedition"
             >
-              Register
+              Learn more
             </ButtonWithLink>
             <ButtonWithLink
               link="https://discord.gg/redstonedefi"
