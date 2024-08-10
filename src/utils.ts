@@ -1,56 +1,77 @@
-import { getAddress } from 'ethers';
-import { openDB, deleteDB, wrap, unwrap } from 'idb';
+import { openDB } from 'idb';
+import { Setter } from 'solid-js';
 
 const CONTRACT_ID = 'p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU';
-const SEASON_1_TIMESTAMP = 1711029600;
+const RANKING_LENGTH = 15;
 
-export const getBalance = async (walletAddress: string) => {
-  const state = (await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}`).then((res) => res.json())).state;
-
-  const address = getUserAddress(state.users, walletAddress);
-  if (!address) {
-    return { balances: null, boosts: null };
+export const getUserId = async (props: {
+  walletAddress: string | null;
+  shouldFetch: boolean | null;
+  setRegistered: Setter<boolean>;
+}) => {
+  const { walletAddress, shouldFetch, setRegistered } = props;
+  const userId = (
+    await cachedOrFetch(
+      `warpy_dashboard_user_id`,
+      async () => {
+        return await fetch(`https://dre-warpy.warp.cc/warpy/user-id?address=${walletAddress}`).then((res) =>
+          res.json()
+        );
+      },
+      shouldFetch
+    )
+  )[0]?.key;
+  if (!userId) {
+    setRegistered(false);
   }
-  const userId = Object.keys(state.users).find((u) => state.users[u] == address);
+  return userId;
+};
+
+export const getBalance = async (props: { userId: string | null; shouldFetch: boolean | null }) => {
+  const { userId, shouldFetch } = props;
   if (!userId) {
     return { balances: null, boosts: null };
   }
-  const currentBlockHeight = (await fetch(`https://gw.warp.cc/gateway/gcp/alive`).then((res) => res.json())).db
-    .l1_last_interaction_height;
 
-  const currentBlockTimestamp = (
-    await fetch(`https://arweave.net/block/height/${currentBlockHeight}`).then((res) => res.json())
-  ).timestamp;
-
-  const userRoles = await fetch(`https://api-warpy.warp.cc/v1/userRoles?id=${userId}`).then((res) => res.json());
-
-  const balance = state.balances[address];
-  const currentSeasons = Object.keys(state.seasons).filter((s) => {
-    return (
-      state.seasons[s].from < state.seasons[s].to &&
-      state.seasons[s].from <= currentBlockTimestamp &&
-      state.seasons[s].to >= currentBlockTimestamp &&
-      (state.seasons[s].role ? userRoles.includes(state.seasons[s].role) : true)
-    );
+  const [seasons, boosts, balance, userRoles] = await Promise.all([
+    await cachedOrFetch(
+      `warpy_dashboard_user_roles`,
+      async () => {
+        return await fetch(`https://api-warpy.warp.cc/v1/userRoles?id=${userId}`).then((res) => res.json());
+      },
+      shouldFetch
+    ),
+    await fetch(`https://dre-warpy.warp.cc/warpy/user-balance?userId=${userId}`).then((res) => res.json()),
+    await cachedOrFetch(
+      `warpy_dashboard_seasons_boosts`,
+      async () => {
+        return await fetch(
+          `https://dre-warpy.warp.cc/warpy/seasons-boosts?timestamp=${Math.round(Date.now() / 1000)}`
+        ).then((res) => res.json());
+      },
+      shouldFetch
+    ),
+  ]).then(async ([r, b, s]) => {
+    const seasons = s[0]?.seasons;
+    const boosts = s[0]?.boosts;
+    const balance = b[0]?.balance;
+    const userRoles = r;
+    return [seasons, boosts, balance, userRoles];
   });
-  const boosts = currentSeasons.map((s) => {
-    return {
-      name: state.seasons[s].boost,
-      value: state.boosts[state.seasons[s].boost],
-    };
-  });
 
-  return { balance: balance || '0', boosts: boosts.length > 0 ? boosts : null };
+  const seasonBoosts = Object.keys(seasons)
+    .filter((s) => (seasons[s].role ? userRoles.includes(seasons[s].role) : true))
+    .map((s) => ({ name: seasons[s].boost, value: boosts[seasons[s].boost] }));
+
+  return { balance: balance || '0', boosts: seasonBoosts.length > 0 ? seasonBoosts : null };
 };
 
-export const userLatestRewards = async (walletAddress: string) => {
-  const users = (
-    await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`).then((res) => res.json())
-  ).result[0];
-  const addressChecksum = getAddress(walletAddress);
-  const userId = Object.keys(users).find(
-    (u) => users[u] == addressChecksum || users[u] == walletAddress || users[u] == walletAddress.toLowerCase()
-  );
+export const userLatestRewards = async (props: { userId: string | null; shouldFetch: boolean | null }) => {
+  const { userId, shouldFetch } = props;
+  if (!userId) {
+    return null;
+  }
+
   const latestRewardsResponse = await fetch(
     `https://dre-warpy.warp.cc/warpy/user-last-rewards?contractId=${CONTRACT_ID}&userId=${userId}&limit=5`
   );
@@ -79,35 +100,61 @@ const formatTimestamp = (timestamp: number) => {
   return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };
 
-export const getRanking = async (props: { walletAddress: string | null; rankingType: string }) => {
-  const { walletAddress, rankingType } = props;
-  let address;
-  if (walletAddress) {
-    const users = (
-      await cachedOrFetch(`warpy_dashboard_ranking_users_${rankingType}`, async () => {
-        return await fetch(`https://dre-warpy.warp.cc/contract?id=${CONTRACT_ID}&query=$.users`).then((res) =>
-          res.json()
-        );
-      })
-    ).result[0];
+export const getRanking = async (props: {
+  userId: string | null;
+  walletAddress: string | null;
+  shouldFetch: boolean | null;
+}) => {
+  const { walletAddress, shouldFetch, userId } = props;
+  const rankingResult = await cachedOrFetch(
+    `warpy_dashboard_ranking_allTime`,
+    async () => {
+      return await fetch(
+        `https://dre-warpy.warp.cc/warpy/user-ranking?${
+          userId ? `userId=${walletAddress}&` : ''
+        }contractId=${CONTRACT_ID}&limit=15`
+      ).then((res) => res.json());
+    },
+    shouldFetch
+  );
 
-    address = getUserAddress(users, walletAddress);
-  }
+  const ids = rankingResult.map((r: any) => r.user_id);
 
-  const rankingResult = await cachedOrFetch(`warpy_dashboard_ranking_${rankingType}`, async () => {
-    return await fetch(
-      `https://dre-warpy.warp.cc/warpy/${
-        rankingType == 'allTime'
-          ? `user-ranking?${address ? `userId=${address}&` : ''}`
-          : `season-ranking?from=${SEASON_1_TIMESTAMP}&${address ? `&address=${address}&` : ''}`
-      }contractId=${CONTRACT_ID}&limit=15`
-    ).then((res) => res.json());
+  const idToRoles = (
+    await fetch('https://api-warpy.warp.cc/v1/usersRoles', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ids }),
+    }).then((res) => res.json())
+  ).id_to_roles;
+
+  const seasonsBoosts = await cachedOrFetch(
+    `warpy_dashboard_seasons_boosts`,
+    async () => {
+      return await fetch(
+        `https://dre-warpy.warp.cc/warpy/seasons-boosts?timestamp=${Math.round(Date.now() / 1000)}`
+      ).then((res) => res.json());
+    },
+    shouldFetch
+  );
+
+  const { seasons } = seasonsBoosts[0];
+  Object.keys(idToRoles).forEach((r: any) => {
+    idToRoles[r] = Object.keys(seasons).filter((s) =>
+      seasons[s].role ? idToRoles[r].includes(seasons[s].role) : true
+    );
   });
 
-  const ids = rankingResult.map((r: any) => r.user_id).join(',');
-  const usernamesResults = await cachedOrFetch(`warpy_dashboard_ranking_usernames_${rankingType}`, async () => {
-    return await fetch(`https://api-warpy.warp.cc/v1/usernames?ids=${ids}`).then((res) => res.json());
-  });
+  const usernamesResults = await cachedOrFetch(
+    `warpy_dashboard_ranking_usernames`,
+    async () => {
+      return await fetch(`https://api-warpy.warp.cc/v1/usernames?ids=${ids.join(',')}`).then((res) => res.json());
+    },
+    shouldFetch
+  );
 
   let user: {
     rn: string;
@@ -116,13 +163,13 @@ export const getRanking = async (props: { walletAddress: string | null; rankingT
     balance: string;
   } | null;
 
-  if (address && rankingResult.length == 16) {
+  if (walletAddress && rankingResult.length == RANKING_LENGTH + 1) {
     user = rankingResult.shift();
   } else {
     user = null;
   }
 
-  const ranking = formatRanking(usernamesResults, rankingResult)!!;
+  const ranking = formatRanking(usernamesResults, idToRoles, rankingResult)!!;
 
   let userRanking;
   if (user) {
@@ -132,8 +179,8 @@ export const getRanking = async (props: { walletAddress: string | null; rankingT
       discordHandle: `@${
         usernamesResults.find((u: { id: string; handler: string }) => u.id == user!!.user_id).handler
       }`,
-      points: user.balance,
-      rewards: { points: '', nft: 'TBA' },
+      points: formatPoints(user.balance),
+      roles: idToRoles[user.user_id].length,
     };
   } else {
     userRanking = null;
@@ -159,22 +206,10 @@ export const countdown = (timestamp: number) => {
   return days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
 };
 
-const getUserAddress = (users: any, address: string) => {
-  const addressChecksum = getAddress(address);
-  const usersValues = Object.values(users);
-  const userAddress =
-    usersValues.indexOf(addressChecksum) > -1
-      ? addressChecksum
-      : usersValues.indexOf(address) > -1
-      ? address
-      : usersValues.indexOf(address.toLowerCase()) > -1
-      ? address.toLowerCase()
-      : null;
-
-  return userAddress;
-};
-
-const cachedOrFetch = async (name: string, fetchFunc: any) => {
+const cachedOrFetch = async (name: string, fetchFunc: any, shouldFetch?: boolean | null) => {
+  if (shouldFetch) {
+    return await fetchFunc();
+  }
   const db = await openDB(name, 1, {
     upgrade(db, oldVersion, newVersion, transaction, event) {
       if (!db.objectStoreNames.contains(name)) {
@@ -210,6 +245,7 @@ const cachedOrFetch = async (name: string, fetchFunc: any) => {
 
 const formatRanking = (
   usernames: { id: string; handler: string }[],
+  idToRoles: { [id: string]: string[] },
   rankingResult: {
     user_id: string;
     rn: string;
@@ -229,12 +265,20 @@ const formatRanking = (
         lp: user.rn,
         address: address.substr(0, 3) + '...' + address.substr(address.length - 3),
         discordHandle: `@${u.handler}`,
-        points,
-        rewards: { points: '', nft: 'TBA' },
+        points: formatPoints(points),
+        roles: idToRoles[u.id].length,
       };
     })
     .sort((a: any, b: any) => a.lp - b.lp);
 
   ranking = ranking.filter((r: any) => !!r);
   return ranking;
+};
+
+const formatPoints = (points: string) => {
+  return Math.abs(Number(points)) >= 1.0e9
+    ? Math.round((Math.abs(Number(points)) / 1.0e9) * 10) / 10 + 'B'
+    : Math.abs(Number(points)) >= 1.0e6
+    ? Math.round((Math.abs(Number(points)) / 1.0e6) * 10) / 10 + 'M'
+    : Math.abs(Number(points));
 };

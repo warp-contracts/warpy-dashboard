@@ -1,7 +1,6 @@
 import { Col, Container, Row, Spinner, Table } from 'solid-bootstrap';
 import { Component, Show } from 'solid-js';
 import './RowTable.scss';
-import RadioSwitch from '../RadioSwitch/RadioSwitch';
 
 interface RowTableProps {
   values: {
@@ -9,14 +8,11 @@ interface RowTableProps {
     address: string;
     discordHandle: string;
     points: number;
-    rewards: { points: string; nft: string };
+    roles: number;
   }[];
   tableIcon: string;
   pointsIcon: string;
   header: string;
-  radios: { name: string; value: string }[];
-  radioValue: () => string;
-  setRadioValue: (v: string | ((prev?: string) => string)) => string;
   loading: boolean;
   walletAddress: string | null;
   disabledValue?: string;
@@ -31,29 +27,19 @@ const template = Array(15).fill({
 const RowTable: Component<RowTableProps> = (props) => {
   return (
     <Container fluid class="row-table">
-      <Row class="justify-content-center card__container__row-header">
+      <Row class="justify-content-center card__container__row-header pb-4">
         <Col class="card__container__header" md={{ span: 4 }}>
           {props.header}
         </Col>
       </Row>
-      <Row>
-        <Col class="row-table__switch">
-          <RadioSwitch
-            radios={props.radios}
-            radioValue={props.radioValue}
-            setRadioValue={props.setRadioValue}
-            disabledValue={props.disabledValue}
-          />
-        </Col>
-      </Row>
-      <Table responsive="sm">
+      <Table responsive="sm" class="pt-5">
         <thead>
           <tr class="table__headers">
             <th class="right">Lp.</th>
             <th>Address</th>
             <th>Discord</th>
+            <th>Roles</th>
             <th class="right">RSG</th>
-            <th class="right">Rewards</th>
           </tr>
         </thead>
         <tbody class={`table__body`}>
@@ -76,16 +62,12 @@ const RowTable: Component<RowTableProps> = (props) => {
                       <td class="table__discord-handle align-middle">
                         <div>{v.discordHandle}</div>
                       </td>
+                      <td class="align-middle">
+                        <span class="table__rsg__points align-middle">{v.roles}</span>
+                      </td>
                       <td class="table__rsg align-middle">
                         <span class="table__rsg__points align-middle">{v.points}</span>
                         <img class="align-middle" height={20} src={props.pointsIcon} />
-                      </td>
-                      <td class="table__rewards align-middle">
-                        <span class="table__rewards__points align-middle">{v.rewards.points}</span>
-                        {v.rewards.points && <img height={20} src={props.pointsIcon} />}
-                        <span class="table__rewards__nft align-middle">
-                          {v.rewards.points && <span>, </span>} {v.rewards.nft}
-                        </span>
                       </td>
                     </tr>
                   </>
@@ -118,16 +100,12 @@ const RowTable: Component<RowTableProps> = (props) => {
                     {v.discordHandle}
                   </div>
                 </td>
+                <td class="align-middle">
+                  <span class="table__rsg__points align-middle">{v.roles}</span>
+                </td>
                 <td class="table__rsg align-middle">
                   <span class="table__rsg__points align-middle">{v.points}</span>
                   <img class="align-middle" height={20} src={props.pointsIcon} />
-                </td>
-                <td class="table__rewards align-middle">
-                  <span class="table__rewards__points align-middle">{v.rewards.points}</span>
-                  {v.rewards.points && <img height={20} src={props.pointsIcon} />}
-                  <span class="table__rewards__nft align-middle">
-                    {v.rewards.points && <span>, </span>} {v.rewards.nft}
-                  </span>
                 </td>
               </tr>
             ))}
