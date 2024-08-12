@@ -33,19 +33,12 @@ export const getBalance = async (walletAddress: string) => {
       (state.seasons[s].role ? userRoles.includes(state.seasons[s].role) : true)
     );
   });
-  const seasonBoosts = currentSeasons.map((s) => {
+  const boosts = currentSeasons.map((s) => {
     return {
       name: state.seasons[s].boost,
       value: state.boosts[state.seasons[s].boost],
     };
   });
-
-  const userBoosts = state.counter[userId]
-    ? state.counter[userId].boosts.map((b: any) => {
-        return { name: b, value: state.boosts[b] };
-      })
-    : [];
-  const boosts = seasonBoosts.concat(userBoosts);
 
   return { balance: balance || '0', boosts: boosts.length > 0 ? boosts : null };
 };

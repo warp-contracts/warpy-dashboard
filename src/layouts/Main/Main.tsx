@@ -47,9 +47,6 @@ const phantomBoosts = [
 
 const phantomRsg = 1570;
 
-const SONAR_CONTRACT_STATE =
-  'https://sonar.warp.cc/#/app/contract/p5OI99-BaY4QbZts266T7EDwofZqs-wVuYJmMCS0SUU?network=mainnet&dre=dreWarpy#current-state';
-
 const Main: Component<MainProps> = (props) => {
   return (
     <Container class="main justify-content-center" fluid>
@@ -58,59 +55,33 @@ const Main: Component<MainProps> = (props) => {
           <Card
             header="Your RSG"
             tableName="Latest rewards"
-            score={
-              !props.walletAddress || props.userRewardsLoading
-                ? phantomRsg
-                : props.rsg
-            }
+            score={!props.walletAddress || props.userRewardsLoading ? phantomRsg : props.rsg}
             scoreIcon="/assets/diamond.svg"
             tableIcon="/assets/link.svg"
             valueIcon="/assets/diamond.svg"
-            values={
-              !props.walletAddress || props.userRewardsLoading
-                ? phantomRewards
-                : props.rewards
-            }
+            values={!props.walletAddress || props.userRewardsLoading ? phantomRewards : props.rewards}
             valueSymbol="/assets/plus.svg"
-            link={SONAR_CONTRACT_STATE}
             blurred={!props.walletAddress || props.userRewardsLoading}
           ></Card>
           <Show when={!props.walletAddress}>
             <div class="main__button-on-blur">
-              <Button
-                color="primary"
-                handleClick={connect}
-                loading={props.loadingWalletAddress}
-              >
+              <Button color="primary" handleClick={connect} loading={props.loadingWalletAddress}>
                 Connect wallet
               </Button>
             </div>
           </Show>
         </Col>
-        <Col
-          md={{ span: 5 }}
-          lg={{ span: 4 }}
-          class="position-relative mt-4 mt-md-0"
-        >
+        <Col md={{ span: 5 }} lg={{ span: 4 }} class="position-relative mt-4 mt-md-0">
           <Card
             header="Boost table"
-            values={
-              !props.walletAddress || props.userRewardsLoading
-                ? phantomBoosts
-                : props.boosts
-            }
+            values={!props.walletAddress || props.userRewardsLoading ? phantomBoosts : props.boosts}
             tableIcon="/assets/boost.svg"
             valueSymbol="/assets/cross.svg"
-            link={SONAR_CONTRACT_STATE}
             blurred={!props.walletAddress || props.userRewardsLoading}
           />
           <Show when={!props.walletAddress}>
             <div class="main__button-on-blur">
-              <Button
-                color="primary"
-                handleClick={connect}
-                loading={props.loadingWalletAddress}
-              >
+              <Button color="primary" handleClick={connect} loading={props.loadingWalletAddress}>
                 Connect wallet
               </Button>
             </div>
@@ -119,12 +90,7 @@ const Main: Component<MainProps> = (props) => {
       </Row>
       <Row class="justify-content-center mt-4">
         <Col md={{ span: 5 }} lg={{ span: 4 }}>
-          <ButtonCard
-            title="Coming soon"
-            buttonTitle="Mint NFT"
-            subtitle=""
-            disabled={true}
-          ></ButtonCard>
+          <ButtonCard title="Coming soon" buttonTitle="Mint NFT" subtitle="" disabled={true}></ButtonCard>
         </Col>
         <Col md={{ span: 5 }} lg={{ span: 4 }} class="mt-4 mt-md-0">
           <ButtonCard
@@ -146,7 +112,6 @@ const Main: Component<MainProps> = (props) => {
             radioValue={props.radioValue}
             setRadioValue={props.setRadioValue}
             loading={props.loading}
-            link={SONAR_CONTRACT_STATE}
             walletAddress={props.walletAddress}
             // disabledValue={!props.timestamp ? 'season' : ''}
           />

@@ -11,24 +11,23 @@ interface CardProps {
   valueIcon?: string;
   values: { name: string; value: any; link?: string; valueSymbol?: string }[] | undefined | null;
   valueSymbol?: string;
-  link: string;
   blurred: boolean;
 }
 
 const Card: ParentComponent<CardProps> = (props) => {
   return (
     <Container class={`card__container ${props.blurred ? 'blurred' : ''}`}>
-      <Row class='justify-content-center card__container__row-header'>
-        <Col class='card__container__header' md={{ span: 8 }}>
+      <Row class="justify-content-center card__container__row-header">
+        <Col class="card__container__header" md={{ span: 8 }}>
           {props.header}
         </Col>
       </Row>
       {props.score && (
-        <Row class='score'>
-          <Col class='d-flex justify-content-center'>
-            <Row class='align-items-center'>
+        <Row class="score">
+          <Col class="d-flex justify-content-center">
+            <Row class="align-items-center">
               <Col>{props.score}</Col>
-              <Col class='d-flex'>
+              <Col class="d-flex">
                 <img src={props.scoreIcon} />
               </Col>
             </Row>
@@ -36,41 +35,36 @@ const Card: ParentComponent<CardProps> = (props) => {
         </Row>
       )}
       {props.tableName && (
-        <Row class='rewards__title'>
-          <Col class='d-flex justify-content-center'>Latest rewards</Col>
+        <Row class="rewards__title">
+          <Col class="d-flex justify-content-center">Latest rewards</Col>
         </Row>
       )}
-      <Table responsive='sm' class='table mb-5'>
+      <Table responsive="sm" class="table mb-5">
         <tbody>
           {props.values &&
             props.values.map((v) => (
-              <tr class='table__row'>
-                <td class='align-middle'>
+              <tr class="table__row">
+                <td class="align-middle">
                   {v.link ? (
-                    <a href={v.link} target='_blank'>
+                    <a href={v.link} target="_blank">
                       <img src={props.tableIcon} />
                     </a>
                   ) : (
                     <img src={props.tableIcon} />
                   )}
                 </td>
-                <td class='table__timestamp align-middle'>
+                <td class="table__timestamp align-middle">
                   <div>{v.name}</div>
                 </td>
-                <td class='table__score align-middle'>
+                <td class="table__score align-middle">
                   <img src={v.valueSymbol || props.valueSymbol} />
-                  <span class='table__points align-middle'>{v.value}</span>
+                  <span class="table__points align-middle">{v.value}</span>
                   {props.valueIcon && <img width={20} src={props.valueIcon} />}
                 </td>
               </tr>
             ))}
         </tbody>
       </Table>
-      <div class='table__more'>
-        <a href={props.link} target='_blank'>
-          Show more
-        </a>
-      </div>
     </Container>
   );
 };
