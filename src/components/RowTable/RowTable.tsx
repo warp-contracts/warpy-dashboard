@@ -38,7 +38,25 @@ const RowTable: Component<RowTableProps> = (props) => {
             <th class="right">Lp.</th>
             <th>Address</th>
             <th>Discord</th>
-            <th>Roles</th>
+            <th>
+              <div class="d-flex align-items-center">
+                <div>Roles</div>
+                <div class="table__tooltip">
+                  <img class="table__tooltip__icon" height="17" width="17" src="/assets/question-mark.svg" />
+                  <span class="table__tooltip__text">
+                    These are special roles that have special significance in the RedStone Expedition. You can find out
+                    what roles are considered special{' '}
+                    <a
+                      href="https://redstone-finance.notion.site/RedStone-Community-Guidebook-282d9d43e6b74bb0a275dfa0bafa8548"
+                      target="__blan"
+                    >
+                      here
+                    </a>
+                    .
+                  </span>
+                </div>
+              </div>
+            </th>
             <th class="right">RSG</th>
           </tr>
         </thead>

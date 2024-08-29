@@ -75,7 +75,7 @@ const Main: Component<MainProps> = (props) => {
         </Col>
         <Col md={{ span: 5 }} lg={{ span: 4 }} class="position-relative mt-4 mt-md-0">
           <Card
-            header="Boost table"
+            header="Roles table"
             values={!props.walletAddress || props.userRewardsLoading ? phantomBoosts : props.boosts}
             tableIcon="/assets/boost.svg"
             valueSymbol="/assets/cross.svg"

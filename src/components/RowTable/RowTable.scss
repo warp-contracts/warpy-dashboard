@@ -80,6 +80,38 @@
     width: 20px;
   }
 
+  &__tooltip {
+    position: relative;
+    display: inline-block;
+
+    &:hover .table__tooltip__text {
+      visibility: visible;
+    }
+
+    &__icon {
+      padding-left: 5px;
+      cursor: pointer;
+      filter: invert(46%) sepia(84%) saturate(2773%) hue-rotate(321deg) brightness(95%) contrast(88%);
+    }
+
+    &__text {
+      visibility: hidden;
+      width: 300px;
+      background-color: base.$dark-color;
+      color: base.$light-color;
+      text-align: center;
+      padding: 5px;
+      border-radius: 6px;
+      position: absolute;
+      z-index: 1;
+      font-size: base.$fs-10;
+
+      a {
+        color: base.$blue-color;
+      }
+    }
+  }
+
   &__lp {
     text-align: right;
     color: base.$text-color;
