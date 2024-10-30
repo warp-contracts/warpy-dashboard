@@ -95,6 +95,15 @@ const Main: Component<MainProps> = (props) => {
           <ButtonCardWrapper withSlider={true}>
             <div class="slide slide1">
               <ButtonCard
+                title="On-chain quest with ListaDAO"
+                buttonTitle="Participate"
+                link="https://x.com/redstone_defi/status/1851632927710564773"
+                subtitle=""
+                backgroundImage="/assets/dao.jpg"
+              ></ButtonCard>
+            </div>
+            <div class="slide slide2">
+              <ButtonCard
                 title="RedStone Halloween Week"
                 buttonTitle="Participate"
                 link="https://x.com/redstone_defi/status/1849496176556658820"
@@ -102,7 +111,7 @@ const Main: Component<MainProps> = (props) => {
                 backgroundImage="/assets/halloween.jpg"
               ></ButtonCard>
             </div>
-            <div class="slide slide2">
+            <div class="slide slide3">
               <ButtonCard
                 title="Weekly Best Content"
                 buttonTitle="Participate"
@@ -111,7 +120,7 @@ const Main: Component<MainProps> = (props) => {
                 backgroundImage="/assets/background_weekly.png"
               ></ButtonCard>
             </div>
-            <div class="slide slide3">
+            <div class="slide slide4">
               <ButtonCard
                 title="Hall of Fame"
                 buttonTitle="Participate"
@@ -120,7 +129,7 @@ const Main: Component<MainProps> = (props) => {
                 backgroundImage="/assets/background_hof.png"
               ></ButtonCard>
             </div>
-            <div class="slide slide4">
+            <div class="slide slide5">
               <ButtonCard
                 title="RedStone Miners"
                 buttonTitle="Participate"
