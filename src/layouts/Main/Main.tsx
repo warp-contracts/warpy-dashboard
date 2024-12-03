@@ -9,6 +9,7 @@ import Button from '../../components/Button/Button';
 import { connect } from '../../App';
 import ButtonCardWrapper from '../../components/ButtonCardWrapper/ButtonCardWrapper';
 import IntroModal from '../IntroModal/IntroModal';
+import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
 
 interface MainProps {
   rsg: number;
@@ -91,6 +92,9 @@ const Main: Component<MainProps> = (props) => {
         </Col>
       </Row>
       <Row class="justify-content-center mt-4">
+        <Col lg={{ span: 8 }} md={{ span: 10 }} class="main">
+          <VideoPlayer />
+        </Col>
         <Col lg={{ span: 8 }} md={{ span: 10 }} class="main__slider__bg">
           <ButtonCardWrapper withSlider={true}>
             <div class="slide slide1">
