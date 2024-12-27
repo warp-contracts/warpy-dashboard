@@ -6,7 +6,6 @@ import ButtonCard from '../../components/ButtonCard/ButtonCard';
 import RowTable from '../../components/RowTable/RowTable';
 import Footer from '../Footer/Footer';
 import Button from '../../components/Button/Button';
-import { connect } from '../../App';
 import ButtonCardWrapper from '../../components/ButtonCardWrapper/ButtonCardWrapper';
 import IntroModal from '../IntroModal/IntroModal';
 import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
@@ -15,8 +14,6 @@ interface MainProps {
   rsg: number;
   boosts: { name: string; value: any }[] | undefined | null;
   rewards: { name: string; value: string }[] | undefined | null;
-  connect: () => void;
-  disconnect: () => void;
   ranking: {
     lp: number;
     address: string;
@@ -28,7 +25,6 @@ interface MainProps {
   walletAddress: string | null;
   userRewardsLoading: boolean;
   timestamp: string | null;
-  loadingWalletAddress: boolean;
   showIntroModal: Accessor<boolean>;
   setShowIntroModal: Setter<boolean>;
 }
@@ -68,9 +64,7 @@ const Main: Component<MainProps> = (props) => {
           ></Card>
           <Show when={!props.walletAddress}>
             <div class="main__button-on-blur">
-              <Button color="primary" handleClick={connect} loading={props.loadingWalletAddress}>
-                Connect wallet
-              </Button>
+              <appkit-button balance="false"></appkit-button>
             </div>
           </Show>
         </Col>
@@ -84,9 +78,7 @@ const Main: Component<MainProps> = (props) => {
           />
           <Show when={!props.walletAddress}>
             <div class="main__button-on-blur">
-              <Button color="primary" handleClick={connect} loading={props.loadingWalletAddress}>
-                Connect wallet
-              </Button>
+              <appkit-button balance="false"></appkit-button>
             </div>
           </Show>
         </Col>
