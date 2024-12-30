@@ -7,11 +7,7 @@ import ButtonWithLink from '../../components/ButtonWithLink/ButtonWithLink';
 
 interface HeaderProps {
   walletAddress: string | null;
-  setWalletAddress: (v: string | null | ((prev?: string | null) => string | null)) => string | null;
-  connect: () => void;
-  disconnect: () => void;
   timestamp: number | null;
-  loadingWalletAddress: boolean;
 }
 
 const Header: Component<HeaderProps> = (props) => {
@@ -35,22 +31,7 @@ const Header: Component<HeaderProps> = (props) => {
             <img src="/assets/header-logo.svg" />
           </div>
           <div class="header__nav__button">
-            {props.walletAddress ? (
-              <div class="d-flex align-items-end align-items-md-center flex-column-reverse flex-md-row">
-                <div class="header__nav__button__result pt-1 mt-md-0">
-                  {props.walletAddress.substr(0, 3) +
-                    '...' +
-                    props.walletAddress.substr(props.walletAddress.length - 3)}
-                </div>
-                <Button color="primary" handleClick={props.disconnect} loading={props.loadingWalletAddress}>
-                  Disconnect wallet
-                </Button>
-              </div>
-            ) : (
-              <Button color="primary" handleClick={props.connect} loading={props.loadingWalletAddress}>
-                Connect wallet
-              </Button>
-            )}
+            <appkit-button balance="false"></appkit-button>
           </div>
         </Col>
         <div class="header__main">
